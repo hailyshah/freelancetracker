@@ -222,7 +222,7 @@ function client(){
 }
 
 /* ===== CLOUD SYNC (Firebase). Paste your Firebase web-app config object over `null` below. Leave null to use this device only. ===== */
-const FB_CONFIG=null;
+const FB_CONFIG={ apiKey: "AIzaSyBPiEQRAUB-Kbyn8azzE09MyoQATOJMGGI", authDomain: "hs-freelance-tracker.firebaseapp.com", projectId: "hs-freelance-tracker", storageBucket: "hs-freelance-tracker.firebasestorage.app", messagingSenderId: "920867457044", appId: "1:920867457044:web:7763401b97b69f4dbdff01" };
 let fdb=null,fuser=null,fq=Promise.resolve(),unsub=null,firstAttach=true;
 function acct(){const e=$('#acct');if(!e)return;e.innerHTML=!FB_CONFIG?'':fuser?`<span class="mut">${esc(fuser.email||'')}</span> <button class="g" onclick="signOut()">Sign out</button>`:`<button onclick="signIn()">Sign in</button>`}
 function cloudInit(){
