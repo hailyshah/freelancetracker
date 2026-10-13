@@ -51,14 +51,17 @@ h2[id],.card[id]{scroll-margin-top:150px}.stat.ck{cursor:pointer}
 select.pill{padding:4px 8px;cursor:pointer}option{background:var(--card);color:var(--ink)}
 .pp-Pending{background:#fde2e2;color:#b42318}.pp-Invoicesent{background:#fff1b8;color:#8a6100}.pp-Received{background:#d3f5df;color:#17713f}.pp-NA{background:#ececea;color:#6b655d}
 .ps-Notstarted{background:#9b1c1c;color:#fff}.ps-Onhold{background:#c2410c;color:#fff}.ps-Inprogress{background:#a16207;color:#fff}.ps-Completed{background:#166534;color:#fff}
+.mrow{padding:0;margin-bottom:8px}.mrow>summary{display:grid;grid-template-columns:90px 1fr 110px 90px 150px;gap:10px;align-items:center;padding:10px 14px;cursor:pointer;list-style:none}.mrow>summary::-webkit-details-marker{display:none}.mrow>div,.mrow>.srow{margin:0 14px}.mrow[open]>summary{border-bottom:1px solid var(--line);margin-bottom:6px}
+.mbar{height:8px;background:var(--line);border-radius:99px;overflow:hidden}.mbar i{display:block;height:100%;background:var(--ok)}.srow{display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px solid var(--line)}.mrow>div:last-child{padding-bottom:10px}
+@media(max-width:620px){.mrow>summary{grid-template-columns:70px 1fr 90px}.mrow>summary>.mbar,.mrow>summary>.mut{grid-column:1/-1}}
 </style><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 </head><body>
-<header><div class="top"><h1>🧾 Studio Tracker</h1><span id="sv" class="mut"></span><span id="acct"></span><div class="bar" style="margin:0">
-<button class="g" onclick="exp()" title="Download all your data as a file">⬇ Backup</button>
-<details id="newm" class="menu"><summary>＋ New</summary><div><button class="g" onclick="nw('project')">📁 Project</button><button class="g" onclick="nw('client')">👥 Client</button><button class="g" onclick="nw('entry')">🧩 Work entry</button></div></details>
-<button class="g" onclick="$('#imp').click()" title="Load a backup file">⬆ Restore</button>
+<header><div class="top"><h1>Studio Tracker</h1><span id="sv" class="mut"></span><span id="acct"></span><div class="bar" style="margin:0">
+<button class="g" onclick="exp()" title="Download all your data as a file">Backup</button>
+<details id="newm" class="menu"><summary>＋ New</summary><div><button class="g" onclick="nw('project')">Project</button><button class="g" onclick="nw('client')">Client</button><button class="g" onclick="nw('entry')">Work entry</button></div></details>
+<button class="g" onclick="$('#imp').click()" title="Load a backup file">Restore</button>
 <input type="file" id="imp" accept=".json" hidden onchange="imp(this)"></div></div><nav id="nav"></nav></header>
 <main id="app"></main><dialog id="dlg"></dialog><div id="toast"></div>
 <script>
@@ -89,7 +92,7 @@ function sync(){
   S.invoices.forEach(i=>{if(!(i.p||[]).length)return;const all=i.p.every(id=>{const p=S.projects.find(x=>x.id==id);return !p||p.payment=='Received'});if(all&&!i.paid){i.paid=true;i.paidOn=i.paidOn||today()}if(!all&&i.paid){i.paid=false;i.paidOn=null}});
 }
 function save(){
-  sync();S.meta.updatedAt=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S));if(!fuser)sv('✓ Saved on this device')}catch(e){mem=true;sv('⚠ Not saved — your browser is blocking storage',1)}
+  sync();S.meta.updatedAt=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S));if(!fuser)sv('✓ Saved on this device')}catch(e){mem=true;sv('Not saved — your browser is blocking storage',1)}
   cloudPush();render()}
 function toast(m,undo){const t=$('#toast');t.innerHTML=esc(m)+(undo?' <button id="un">Undo</button>':'');t.style.display='flex';clearTimeout(tt);tt=setTimeout(()=>t.style.display='none',6000);if(undo)$('#un').onclick=()=>{undo();t.style.display='none'}}
 function exp(){S.meta.lastBackup=today();const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,1)],{type:'application/json'}));a.download='studio-tracker-backup-'+today()+'.json';a.click();save();toast('Backup downloaded — keep it somewhere safe')}
@@ -116,8 +119,8 @@ function editClient(id){
 function editProject(id){
   if(!S.clients.length)return toast('Add a client first (Clients tab).');
   const p=S.projects.find(x=>x.id==id)||{};
-  form(id?'Edit project':'New project',[{k:'name',l:'Project / deliverable *',v:p.name,req:1},{k:'client',l:'Client',v:p.client||cur||S.clients[0].id,o:S.clients.map(c=>[c.id,c.name])},{k:'date',l:'Start date',t:'date',v:p.date||today()},{k:'amount',l:'Amount (₹) — leave 0 if not decided yet',t:'number',v:p.amount||''},{k:'duration',l:'Timeline (e.g. 2 weeks)',v:p.duration},{k:'status',l:'Status',v:p.status||'In progress',o:ST},{k:'payment',l:'Payment',v:p.payment||'Pending',o:PAY}],v=>{
-    if(!v.name)return toast('Please enter a project name');if(id)Object.assign(p,v);else{p.id=uid();p.invoiced=false;Object.assign(p,v);S.projects.push(p)}save();toast('Project saved')});
+  form(id?'Edit project':'New project',[{k:'name',l:'Project / deliverable *',v:p.name,req:1},{k:'client',l:'Client',v:p.client||cur||S.clients[0].id,o:S.clients.map(c=>[c.id,c.name])},{k:'date',l:'Start date',t:'date',v:p.date||today()},{k:'amount',l:'Amount (₹) — leave 0 if not decided yet',t:'number',v:p.amount||''},{k:'duration',l:'Timeline (e.g. 2 weeks)',v:p.duration},{k:'status',l:'Status',v:p.status||'In progress',o:ST},{k:'payment',l:'Payment',v:p.payment||'Pending',o:PAY},{k:'paidMonth',l:'Month payment received (if paid)',t:'month',v:p.paidMonth||''}],v=>{
+    if(!v.name)return toast('Please enter a project name');if(v.payment!='Received')v.paidMonth='';else if(!v.paidMonth)v.paidMonth=today().slice(0,7);if(id)Object.assign(p,v);else{p.id=uid();p.invoiced=false;Object.assign(p,v);S.projects.push(p)}save();toast('Project saved')});
 }
 function editEntry(id,cid){
   const e=S.entries.find(x=>x.id==id)||{};cid=e.client||cid||cur;const c=S.clients.find(x=>x.id==cid);if(!c)return;
@@ -130,14 +133,15 @@ function editEntry(id,cid){
 }
 function del(list,id,what){const snap=JSON.stringify(S);ask('Delete this '+what+'?',()=>{S[list]=S[list].filter(x=>x.id!=id);save();toast(what[0].toUpperCase()+what.slice(1)+' deleted',()=>{S=JSON.parse(snap);save()})})}
 function delClient(id){const snap=JSON.stringify(S);ask('Delete this client and ALL their projects, entries and invoices?',()=>{S.clients=S.clients.filter(x=>x.id!=id);['projects','entries','invoices'].forEach(l=>S[l]=S[l].filter(x=>x.client!=id));go('cli');toast('Client deleted',()=>{S=JSON.parse(snap);save()})})}
-function setF(list,id,k,v){S[list].find(x=>x.id==id)[k]=v;save()}
+function setF(list,id,k,v){const o=S[list].find(x=>x.id==id);o[k]=v;if(list=='projects'&&k=='payment'){if(v=='Received'){if(!o.paidMonth)o.paidMonth=today().slice(0,7)}else o.paidMonth=''}save()}
 function invoice(cid){
   const b=bill(cid);if(!b.length)return;const sub=b.reduce((a,x)=>a+x.amt,0),disc=+($('#disc')||{}).value||0,rush=+($('#rush')||{}).value||0;
   S.invoices.push({id:uid(),client:cid,date:today(),sub,disc,rush,total:sub-disc+rush,paid:false,p:b.filter(x=>x.k=='p').map(x=>x.id),e:b.filter(x=>x.k=='e').map(x=>x.id)});
   b.forEach(x=>{const i=(x.k=='p'?S.projects:S.entries).find(i=>i.id==x.id);i.invoiced=true;if(x.k=='p'&&i.payment=='Pending')i.payment='Invoice sent'});save();toast('Marked as invoiced — it now shows under "Awaiting payment"');
 }
-function pay(id,v){const i=S.invoices.find(x=>x.id==id);i.paid=v;i.paidOn=v?today():null;(i.p||[]).forEach(pid=>{const p=S.projects.find(x=>x.id==pid);if(p)p.payment=v?'Received':'Invoice sent'});save()}
+function pay(id,v){const i=S.invoices.find(x=>x.id==id);i.paid=v;i.paidOn=v?today():null;(i.p||[]).forEach(pid=>{const p=S.projects.find(x=>x.id==pid);if(p){p.payment=v?'Received':'Invoice sent';if(v){if(!p.paidMonth)p.paidMonth=today().slice(0,7)}else p.paidMonth=''}});save()}
 function cancelInv(id){const snap=JSON.stringify(S);ask('Cancel this invoice? Its work goes back to "unbilled".',()=>{const i=S.invoices.find(x=>x.id==id);(i.p||[]).forEach(x=>{const p=S.projects.find(y=>y.id==x);if(p){p.invoiced=false;if(p.payment=='Invoice sent')p.payment='Pending'}});(i.e||[]).forEach(x=>{const e=S.entries.find(y=>y.id==x);if(e)e.invoiced=false});S.invoices=S.invoices.filter(x=>x.id!=id);save();toast('Invoice cancelled',()=>{S=JSON.parse(snap);save()})})}
+const paidInp=p=>`<input type="month" value="${esc(p.paidMonth||'')}" onchange="setF('projects','${p.id}','paidMonth',this.value)" style="width:140px${p.paidMonth?'':';border-color:var(--bad)'}" title="Month the payment was received">`;
 const slug=s=>String(s||'').replace(/[^a-zA-Z]/g,'');
 const pP=v=>`<span class="pill pp-${slug(v)}">${esc(v)}</span>`,pS=v=>`<span class="pill ps-${slug(v)}">${esc(v)}</span>`;
 const emon=e=>{const p=S.projects.find(x=>x.id==e.proj);return(p?p.date:e.date).slice(0,7)};
@@ -146,7 +150,26 @@ let cq='';
 function calcNet(t){$('#net').textContent=inr(t-(+$('#disc').value||0)+(+$('#rush').value||0))}
 function editInv(id){const i=S.invoices.find(x=>x.id==id);form('Edit invoice — '+esc(cn(i.client)),[{k:'disc',l:'Discount (₹, subtracted)',t:'number',v:i.disc||0},{k:'rush',l:'Rush fee (₹, added)',t:'number',v:i.rush||0}],v=>{i.disc=v.disc;i.rush=v.rush;i.total=i.sub-v.disc+v.rush;save();toast('Invoice updated')},v=>'Invoice total: '+inr(i.sub-v.disc+v.rush)+'  (work '+inr(i.sub)+')')}
 function go(v,c){const h=v=='client'?'client/'+c:v;if(location.hash=='#'+h)route();else location.hash=h}
-function route(){const h=(location.hash||'#dash').slice(1).split('/'),nv=['dash','proj','cli','client'].includes(h[0])?h[0]:'dash';if(nv!=view||(h[1]||null)!=cur){mf='all';bf='all'}view=nv;cur=h[1]||null;render();scrollTo(0,0)}
+let sy='all';
+function sumTotal(l){return l.reduce((a,p)=>a+(+p.amount||0),0)}
+function summary(){
+  const rec=S.projects.filter(p=>p.payment=='Received'&&p.amount>0),unset=rec.filter(p=>!p.paidMonth);
+  const all=[...new Set([...S.projects.map(p=>p.date.slice(0,7)),...rec.filter(p=>p.paidMonth).map(p=>p.paidMonth)])].sort();
+  const years=[...new Set(all.map(m=>m.slice(0,4)))],ms=all.filter(m=>sy=='all'||m.startsWith(sy)).reverse();
+  const earn=m=>rec.filter(p=>p.paidMonth==m),st=m=>S.projects.filter(p=>p.date.slice(0,7)==m);
+  const tE=ms.reduce((a,m)=>a+sumTotal(earn(m)),0)+(sy=='all'?sumTotal(unset):0),mx=Math.max(1,...ms.map(m=>sumTotal(earn(m))));
+  const li=(p,x)=>`<div class="srow"><span>${clk(p.client)} <span class="mut">· ${esc(p.name)}</span></span><span>${x}</span></div>`;
+  const rows=ms.map(m=>{const e=earn(m),s=st(m),done=s.filter(p=>p.status=='Completed').length;
+    return`<details class="card mrow"><summary><b>${ml(m)}</b><span class="mbar"><i style="width:${Math.round(sumTotal(e)/mx*100)}%"></i></span><b class="n">${inr(sumTotal(e))}</b><span class="mut">${e.length} payment${e.length==1?'':'s'}</span><span class="mut">${s.length} started${s.length?`, ${done} completed`:''}</span></summary>
+<div class="lab">Payments received in ${ml(m)}</div>${e.length?e.map(p=>li(p,inr(p.amount))).join(''):'<div class="mut">None</div>'}
+<div class="lab">Projects started in ${ml(m)}</div>${s.length?s.map(p=>li(p,pS(p.status))).join(''):'<div class="mut">None</div>'}</details>`}).join('');
+  return`<div class="bar"><select onchange="sy=this.value;render()"><option value="all">All time</option>${opts(years,sy)}</select><span class="mut">Earnings count in the month the payment was received, not the month the project started.</span></div>
+<div class="grid"><div class="card stat"><span class="mut">Received${sy=='all'?'':' in '+sy}</span><b>${inr(tE)}</b></div><div class="card stat"><span class="mut">Payments received</span><b>${ms.reduce((a,m)=>a+earn(m).length,0)+(sy=='all'?unset.length:0)}</b></div><div class="card stat"><span class="mut">Projects started</span><b>${ms.reduce((a,m)=>a+st(m).length,0)}</b></div></div>
+${unset.length&&sy=='all'?`<details class="card mrow" style="margin-top:10px;border-color:var(--warn)"><summary><b>Month not set</b><span class="mut" style="grid-column:2/4">These paid projects have no payment month yet. Set it in the Projects tab (Paid in column).</span><b class="n">${inr(sumTotal(unset))}</b><span class="mut">${unset.length} payment${unset.length==1?'':'s'}</span></summary>${unset.map(p=>li(p,inr(p.amount))).join('')}</details>`:''}
+<h2>Month by month</h2>${rows||'<div class="card empty">Nothing to show yet.</div>'}`;
+}
+
+function route(){const h=(location.hash||'#dash').slice(1).split('/'),nv=['dash','proj','cli','client','sum'].includes(h[0])?h[0]:'dash';if(nv!=view||(h[1]||null)!=cur){mf='all';bf='all'}view=nv;cur=h[1]||null;render();scrollTo(0,0)}
 addEventListener('hashchange',route);
 function showP(f,s){pf={m:'all',c:'all',s:s||'All',q:'',f:f};go('proj')}
 function clearF(){pf={m:'all',c:'all',s:'All',q:'',f:'all'};render()}
@@ -155,8 +178,8 @@ function setLink(id,pid){const e=S.entries.find(x=>x.id==id),p=S.projects.find(x
 function nw(k){$('#newm').open=false;if(k=='project')editProject();else if(k=='client')editClient();else if(view=='client'&&cur)editEntry();else if(!S.clients.length)toast('Add a client first.');else form('Add work entry for…',[{k:'client',l:'Which client?',v:S.clients[0].id,o:S.clients.map(c=>[c.id,c.name])}],v=>editEntry(null,v.client))}
 function render(){
   const lim=ymd(new Date(Date.now()+7*864e5)),n=S.clients.filter(c=>{const d=due(c);return d&&d<=lim}).length;
-  $('#nav').innerHTML=[['dash','🏠 Dashboard',n?`<span class="cnt hot" title="Invoices due within a week">${n}</span>`:''],['proj','📁 Projects',`<span class="cnt">${S.projects.length}</span>`],['cli','👥 Clients',`<span class="cnt">${S.clients.length}</span>`]].map(([k,l,c])=>`<button class="${view==k||(k=='cli'&&view=='client')?'on':''}" onclick="go('${k}')">${l} ${c}</button>`).join('');
-  $('#app').innerHTML=(FB_CONFIG&&!fuser?'<div class="banner">☁ <span>Sign in to sync your data across all your devices.</span><button onclick="signIn()">Sign in with Google</button></div>':'')+(mem?'<div class="banner">⚠ Your browser is blocking saving, so changes will be lost when you close this page. Use ⬇ Backup often.</div>':'')+(view=='dash'?dash():view=='proj'?proj():view=='cli'?clients():client());
+  $('#nav').innerHTML=[['dash','Dashboard',n?`<span class="cnt hot" title="Invoices due within a week">${n}</span>`:''],['proj','Projects',`<span class="cnt">${S.projects.length}</span>`],['cli','Clients',`<span class="cnt">${S.clients.length}</span>`],['sum','Summary','']].map(([k,l,c])=>`<button class="${view==k||(k=='cli'&&view=='client')?'on':''}" onclick="go('${k}')">${l} ${c}</button>`).join('');
+  $('#app').innerHTML=(FB_CONFIG&&!fuser?'<div class="banner"><span>Sign in to sync your data across all your devices.</span><button onclick="signIn()">Sign in with Google</button></div>':'')+(mem?'<div class="banner">Your browser is blocking saving, so changes will be lost when you close this page. Use Backup often.</div>':'')+(view=='dash'?dash():view=='proj'?proj():view=='cli'?clients():view=='sum'?summary():client());
   document.title=(n?`(${n}) `:'')+'Studio Tracker';
 }
 function dash(){
@@ -164,32 +187,32 @@ function dash(){
   const rem=S.clients.map(c=>({c,d:due(c),t:bill(c.id).reduce((s,x)=>s+x.amt,0)})).filter(r=>r.d).sort((a,b)=>a.d<b.d?-1:1);
   const stale=S.clients.length>0&&!fuser&&(!S.meta.lastBackup||(Date.now()-new Date(S.meta.lastBackup))/864e5>14);
   const card=(l,v,act,sub)=>`<div class="card stat ck" onclick="${act}"><span class="mut">${l}</span><b>${v}</b><span class="mut">${sub}</span></div>`;
-  return(!S.clients.length?'<div class="card" style="margin-bottom:12px"><b>👋 Welcome!</b><p class="mut" style="margin:6px 0 0">Starting fresh? Add your first client with <b>＋ New</b>. Already have a backup file? Use <b>⬆ Restore</b> (top right) to load it.</p></div>':'')+(stale?`<div class="banner">💾 <span>${S.meta.lastBackup?'Last backup was over 2 weeks ago.':'You haven\'t backed up yet.'} Your data lives in this browser only.</span><button onclick="exp()">Back up now</button></div>`:'')+
+  return(!S.clients.length?'<div class="card" style="margin-bottom:12px"><b>Welcome!</b><p class="mut" style="margin:6px 0 0">Starting fresh? Add your first client with <b>＋ New</b>. Already have a backup file? Use <b>Restore</b> (top right) to load it.</p></div>':'')+(stale?`<div class="banner"><span>${S.meta.lastBackup?'Last backup was over 2 weeks ago.':'You haven\'t backed up yet.'} Your data lives in this browser only.</span><button onclick="exp()">Back up now</button></div>`:'')+
 `<div class="grid">${card('Work ready to invoice',inr(unb),"jump('rem')",'see who to invoice ↓')}${card('Invoiced, awaiting payment',inr(out.reduce((a,i)=>a+i.total,0)+orp.reduce((a,p)=>a+p.amount,0)),"showP('awaiting')",`${out.length+orp.length} invoice${out.length+orp.length==1?'':'s'} · view projects →`)}${card('Projects in progress',S.projects.filter(p=>p.status=='In progress').length,"showP('all','In progress')",'view projects →')}</div>
-<h2 id="rem">🔔 Time to invoice <span class="cnt">${rem.length}</span></h2>`+(rem.length?rem.map(r=>{const days=Math.round((new Date(r.d+'T00:00')-new Date(td+'T00:00'))/864e5),cl=days<0?'over':days<=7?'soon':'later';
+<h2 id="rem">Time to invoice <span class="cnt">${rem.length}</span></h2>`+(rem.length?rem.map(r=>{const days=Math.round((new Date(r.d+'T00:00')-new Date(td+'T00:00'))/864e5),cl=days<0?'over':days<=7?'soon':'later';
     const msg=days<0?`Overdue by ${-days} day${days==-1?'':'s'}`:days==0?'Invoice today':`Invoice by ${fd(r.d)} · in ${days} days`;
-    return`<div class="card rem ${cl}"><div>${clk(r.c.id)} <span class="tag">${CYC[r.c.cycle]}</span><div class="mut">${msg}</div></div><div><b>${inr(r.t)}</b> <button onclick="go('client','${r.c.id}')">Review &amp; invoice</button></div></div>`}).join(''):`<div class="card empty">Nothing to invoice right now 🎉</div>`)+
-  `<h2>⏳ Awaiting payment <span class="cnt">${out.length+orp.length}</span></h2>`+(out.length+orp.length?orp.map(p=>`<div class="card rem"><div>${clk(p.client)}<div class="mut">${esc(p.name)} · invoice sent</div></div><div><b>${inr(p.amount)}</b> <button onclick="setF('projects','${p.id}','payment','Received')">Mark paid</button></div></div>`).join('')+out.map(i=>`<div class="card rem"><div>${clk(i.client)}<div class="mut">Invoiced ${fd(i.date)}${i.disc?` · −${inr(i.disc)} discount`:''}${i.rush?` · +${inr(i.rush)} rush fee`:''}</div></div><div><b>${inr(i.total)}</b> <button onclick="pay('${i.id}',true)">Mark paid</button></div></div>`).join(''):`<div class="card empty">No unpaid invoices</div>`)+
-  `<details><summary>How this works</summary><p class="mut"><b>Dashboard</b> shows what needs action. <b>Projects</b> lists every job — use the quick views and filters. <b>Clients</b> opens a client's page: billing, work entries, projects and invoices. Use <b>＋ New</b> (top right) to add things from anywhere. Everything is saved in this browser — use ⬇ Backup now and then.</p></details>`;
+    return`<div class="card rem ${cl}"><div>${clk(r.c.id)} <span class="tag">${CYC[r.c.cycle]}</span><div class="mut">${msg}</div></div><div><b>${inr(r.t)}</b> <button onclick="go('client','${r.c.id}')">Review &amp; invoice</button></div></div>`}).join(''):`<div class="card empty">Nothing to invoice right now</div>`)+
+  `<h2>Awaiting payment <span class="cnt">${out.length+orp.length}</span></h2>`+(out.length+orp.length?orp.map(p=>`<div class="card rem"><div>${clk(p.client)}<div class="mut">${esc(p.name)} · invoice sent</div></div><div><b>${inr(p.amount)}</b> <button onclick="setF('projects','${p.id}','payment','Received')">Mark paid</button></div></div>`).join('')+out.map(i=>`<div class="card rem"><div>${clk(i.client)}<div class="mut">Invoiced ${fd(i.date)}${i.disc?` · −${inr(i.disc)} discount`:''}${i.rush?` · +${inr(i.rush)} rush fee`:''}</div></div><div><b>${inr(i.total)}</b> <button onclick="pay('${i.id}',true)">Mark paid</button></div></div>`).join(''):`<div class="card empty">No unpaid invoices</div>`)+
+  `<details><summary>How this works</summary><p class="mut"><b>Dashboard</b> shows what needs action. <b>Projects</b> lists every job — use the quick views and filters. <b>Clients</b> opens a client's page: billing, work entries, projects and invoices. Use <b>＋ New</b> (top right) to add things from anywhere. Everything is saved in this browser — use Backup now and then.</p></details>`;
 }
 function ptab(){
   const l=S.projects.filter(p=>pm[pf.f](p)&&(pf.m=='all'||p.date.slice(0,7)==pf.m)&&(pf.c=='all'||p.client==pf.c)&&(pf.s=='All'||p.status==pf.s)&&(!pf.q||(p.name+cn(p.client)).toLowerCase().includes(pf.q.toLowerCase()))).sort((a,b)=>a.date<b.date?1:-1);
   const sel=(p,k,o,pre)=>`<select class="pill ${pre}-${slug(p[k])}" onchange="setF('projects','${p.id}','${k}',this.value)">${opts(o,p[k])}</select>`;
-  return`<div class="mut" style="margin:6px 0">${l.length} project${l.length==1?'':'s'} · total ${inr(l.reduce((a,p)=>a+(+p.amount||0),0))}</div><div class="card wrap"><table><thead><tr><th>Date</th><th>Client</th><th>Project</th><th class="n">Amount</th><th>Status</th><th>Payment</th><th></th></tr></thead><tbody>`+
-  l.map(p=>`<tr><td>${fd(p.date)}</td><td>${clk(p.client)}</td><td style="white-space:normal;min-width:180px">${esc(p.name)}</td><td class="n">${inr(p.amount)}</td><td>${sel(p,'status',ST,'ps')}</td><td>${sel(p,'payment',PAY,'pp')}</td><td><button class="t" onclick="editProject('${p.id}')">✏️ Edit</button><button class="t d" onclick="del('projects','${p.id}','project')">🗑</button></td></tr>`).join('')+`</tbody></table>${l.length?'':'<div class="empty">No projects match these filters.</div>'}</div>`;
+  return`<div class="mut" style="margin:6px 0">${l.length} project${l.length==1?'':'s'} · total ${inr(l.reduce((a,p)=>a+(+p.amount||0),0))}</div><div class="card wrap"><table><thead><tr><th>Date</th><th>Client</th><th>Project</th><th class="n">Amount</th><th>Status</th><th>Payment</th><th>Paid in</th><th></th></tr></thead><tbody>`+
+  l.map(p=>`<tr><td>${fd(p.date)}</td><td>${clk(p.client)}</td><td style="white-space:normal;min-width:180px">${esc(p.name)}</td><td class="n">${inr(p.amount)}</td><td>${sel(p,'status',ST,'ps')}</td><td>${sel(p,'payment',PAY,'pp')}</td><td>${p.payment=='Received'?paidInp(p):''}</td><td><button class="t" onclick="editProject('${p.id}')">Edit</button><button class="t d" onclick="del('projects','${p.id}','project')">Delete</button></td></tr>`).join('')+`</tbody></table>${l.length?'':'<div class="empty">No projects match these filters.</div>'}</div>`;
 }
 function proj(){
   return`<div class="lab">Quick views</div><div class="bar">${PF.map(([k,l])=>`<button class="${pf.f==k?'':'g'}" onclick="pf.f='${k}';render()">${l} <span class="tag">${S.projects.filter(pm[k]).length}</span></button>`).join('')}</div>
 <div class="lab">Refine</div><div class="bar"><input type="search" placeholder="Search projects…" value="${esc(pf.q)}" oninput="pf.q=this.value;$('#ptab').innerHTML=ptab()">
 <select onchange="pf.m=this.value;render()">${mopts(S.projects.map(p=>p.date),pf.m)}</select>
 <select onchange="pf.c=this.value;render()"><option value="all">All clients</option>${opts(S.clients.map(c=>[c.id,c.name]),pf.c)}</select>
-<select onchange="pf.s=this.value;render()">${opts(['All',...ST],pf.s)}</select><button class="g" onclick="clearF()">✕ Clear filters</button><span class="sp"></span><button onclick="editProject()">＋ New project</button></div>
+<select onchange="pf.s=this.value;render()">${opts(['All',...ST],pf.s)}</select><button class="g" onclick="clearF()">Clear filters</button><span class="sp"></span><button onclick="editProject()">＋ New project</button></div>
 <div class="legend mut"><b>Payment:</b> ${['Pending','Invoice sent','Received','N/A'].map(pP).join(' ')} &nbsp; <b>Project:</b> ${ST.map(pS).join(' ')}</div><div id="ptab">${ptab()}</div>`;
 }
 function ctab(){
   const q=cq.toLowerCase(),l=S.clients.filter(c=>!q||(c.name+(c.contact||'')).toLowerCase().includes(q)).sort((a,b)=>a.name.localeCompare(b.name));
   return`<div class="grid">`+l.map(c=>{const t=bill(c.id).reduce((a,x)=>a+x.amt,0),d=due(c);
-    return`<div class="card ck" onclick="go('client','${c.id}')"><b>${esc(c.name)}</b>${d&&d<today()?' <span class="pill pp-Pending">Invoice overdue</span>':''}<div class="mut">${esc(c.contact)||'&nbsp;'}</div><div style="margin-top:8px"><span class="tag">${CYC[c.cycle]}</span>${c.retainer?' <span class="tag">Retainer</span>':''}</div><div style="margin-top:8px">Ready to invoice <b>${inr(t)}</b></div></div>`}).join('')+`</div>${l.length?'':'<div class="card empty">No clients found.</div>'}`;
+    return`<div class="card ck" onclick="go('client','${c.id}')"><b>${esc(c.name)}</b>${d&&d<today()?' <span class="pill pp-Pending">Invoice overdue</span>':''}<div class="mut">${esc(c.contact)||'&nbsp;'}</div><div style="margin-top:8px">${c.cycle!='project'?`<span class="tag">${CYC[c.cycle]}</span>`:''}${c.retainer?' <span class="tag">Retainer</span>':''}</div><div style="margin-top:8px">Ready to invoice <b>${inr(t)}</b></div></div>`}).join('')+`</div>${l.length?'':'<div class="card empty">No clients found.</div>'}`;
 }
 function clients(){return`<div class="bar"><input type="search" placeholder="Search clients…" value="${esc(cq)}" oninput="cq=this.value;$('#ctab').innerHTML=ctab()"><span class="sp"></span><button onclick="editClient()">＋ New client</button></div><div id="ctab">${ctab()}</div>`}
 function client(){
@@ -198,11 +221,11 @@ function client(){
   const l=all.filter(e=>(mf=='all'||emon(e)==mf)&&(R?(bf!='unl'||!ok(e.proj)):(bf=='all'||(bf=='un')==!e.invoiced))).sort((a,b)=>a.date<b.date?1:-1);
   const t=bill(c.id).reduce((a,x)=>a+x.amt,0),d=due(c),unl=R?all.filter(e=>!ok(e.proj)).length:0;
   const rsel=e=>`<select onchange="setLink('${e.id}',this.value)"><option value="">— not linked —</option>${prs.map(p=>`<option value="${p.id}" ${p.id==e.proj?'selected':''}>${ml(p.date.slice(0,7))} · ${esc(p.name)} · ${inr(p.amount)}</option>`).join('')}</select>`;
-  const act=e=>`<td><button class="t" onclick="editEntry('${e.id}')">✏️ Edit</button><button class="t d" onclick="del('entries','${e.id}','entry')">🗑</button></td>`;
+  const act=e=>`<td><button class="t" onclick="editEntry('${e.id}')">Edit</button><button class="t d" onclick="del('entries','${e.id}','entry')">Delete</button></td>`;
   const linked=[...new Set(l.filter(e=>ok(e.proj)).map(e=>e.proj))].reduce((a,id)=>a+(+prs.find(p=>p.id==id).amount||0),0);
   const invTag=e=>{const i=S.invoices.find(x=>(x.e||[]).includes(e.id));return i?`<span class="mut">${fd(i.date)} · ${inr(i.total)}</span> ${pP(i.paid?'Received':'Invoice sent')}`:''},rpay=e=>{const p=prs.find(x=>x.id==e.proj);return p?pP(p.payment):''};
   return`<div class="mut crumb"><a class="lk" href="#cli">Clients</a> › <b>${esc(c.name)}</b></div>
-<div class="bar"><h2 style="margin:0 6px 0 0">${esc(c.name)}</h2><span class="mut">${esc(c.contact)}</span>${R?' <span class="tag">Retainer client</span>':''}<span class="sp"></span><button class="g" onclick="editClient('${c.id}')">✏️ Edit client</button><button class="g d" onclick="delClient('${c.id}')">🗑 Delete</button></div>
+<div class="bar"><h2 style="margin:0 6px 0 0">${esc(c.name)}</h2><span class="mut">${esc(c.contact)}</span>${R?' <span class="tag">Retainer client</span>':''}<span class="sp"></span><button class="g" onclick="editClient('${c.id}')">Edit client</button><button class="g d" onclick="delClient('${c.id}')">Delete</button></div>
 <div class="jump"><span class="mut">Jump to:</span><button class="g" onclick="jump('s-bill')">Invoice</button><button class="g" onclick="jump('s-ent')">${R?'Deliverables':'Work entries'}</button><button class="g" onclick="jump('s-proj')">Projects</button><button class="g" onclick="jump('s-inv')">Invoices</button></div>
 <div class="card" id="s-bill"><div class="bar" style="align-items:flex-end"><div><span class="mut">Ready to invoice</span><br><b style="font-size:24px">${inr(t)}</b></div><span class="sp"></span>
 <label style="margin:0">Remind me<br><select onchange="setF('clients','${c.id}','cycle',this.value)">${opts(Object.entries(CYC),c.cycle)}</select></label>
@@ -210,15 +233,15 @@ function client(){
 <label style="margin:0">Rush fee (₹, added)<br><input id="rush" type="number" min="0" value="0" style="width:110px" oninput="calcNet(${t})"></label>
 <div><span class="mut">Invoice total</span><br><b id="net" style="font-size:18px">${inr(t)}</b></div><button onclick="invoice('${c.id}')" ${t?'':'disabled'}>Mark invoiced</button></div>
 <div class="mut">${d?'Invoice reminder: '+fd(d):c.cycle=='project'&&t?'Reminder starts once a project is marked Completed':'Nothing waiting to be invoiced'}</div></div>
-<h2 id="s-ent">${R?'Deliverables':'Work entries'}</h2>${R?`<p class="mut" style="margin:0 0 6px">Deliverables are covered by that month's retainer, so they carry no price of their own.</p>`:''}${unl?`<div class="banner">⚠ <span>${unl} deliverable${unl==1?' isn\'t':'s aren\'t'} linked to a retainer yet.</span><button onclick="bf='unl';render()">Show them</button></div>`:''}
+<h2 id="s-ent">${R?'Deliverables':'Work entries'}</h2>${R?`<p class="mut" style="margin:0 0 6px">Deliverables are covered by that month's retainer, so they carry no price of their own.</p>`:''}${unl?`<div class="banner"><span>${unl} deliverable${unl==1?' isn\'t':'s aren\'t'} linked to a retainer yet.</span><button onclick="bf='unl';render()">Show them</button></div>`:''}
 <div class="bar"><button onclick="editEntry()">＋ Add ${R?'deliverable':'entry'}</button>
 <select onchange="mf=this.value;render()">${mopts(all.map(e=>emon(e)+'-01'),mf)}</select>
 <select onchange="bf=this.value;render()">${opts(R?[['all','All deliverables'],['unl','Not linked to a retainer']]:[['all','All entries'],['un','Not invoiced yet'],['bi','Already invoiced']],bf)}</select></div>
 <div class="card wrap"><table><thead><tr>`+(R?`<th>Month</th><th>Deliverable</th><th class="n">Qty</th><th>Retainer</th><th>Payment</th><th></th>`:`<th>Date</th><th>Work</th><th class="n">Qty</th><th class="n">Rate</th><th class="n">Amount</th><th>Invoiced</th><th>Invoice</th><th></th>`)+`</tr></thead><tbody>`+
   l.map(e=>R?`<tr><td>${ml(emon(e))}</td><td style="white-space:normal;min-width:200px">${esc(e.desc)}</td><td class="n">${e.qty}</td><td>${rsel(e)}</td><td>${rpay(e)}</td>${act(e)}</tr>`:`<tr><td>${fd(e.date)}</td><td style="white-space:normal;min-width:200px">${esc(e.desc)}</td><td class="n">${e.qty}</td><td class="n">${inr(e.rate)}</td><td class="n">${inr(e.qty*e.rate)}</td><td><input type="checkbox" ${e.invoiced?'checked':''} onchange="setF('entries','${e.id}','invoiced',this.checked)" title="Tick when invoiced"></td><td>${invTag(e)}</td>${act(e)}</tr>`).join('')+
   `</tbody>${l.length?`<tfoot><tr>${R?`<td colspan="2">Total for this view: ${l.length} deliverable${l.length==1?'':'s'}</td><td class="n">${l.reduce((a,e)=>a+e.qty,0)}</td><td colspan="3">Retainer value: ${inr(linked)}</td>`:`<td colspan="4">Total for this view (${l.length})</td><td class="n">${inr(l.reduce((a,e)=>a+e.qty*e.rate,0))}</td><td colspan="3"></td>`}</tr></tfoot>`:''}</table>${l.length?'':'<div class="empty">Nothing here yet.</div>'}</div>
-<h2 id="s-proj">Projects</h2><div class="bar"><button class="g" onclick="editProject()">＋ New project</button></div>`+(prs.length?`<div class="card wrap"><table><tbody>`+prs.map(p=>`<tr><td>${fd(p.date)}</td><td style="white-space:normal">${esc(p.name)}${R?` <span class="mut">· ${all.filter(e=>e.proj==p.id).length} deliverables</span>`:''}</td><td class="n">${inr(p.amount)}</td><td>${pS(p.status)}</td><td>${pP(p.payment)}</td><td><button class="t" onclick="editProject('${p.id}')">✏️</button><button class="t d" onclick="del('projects','${p.id}','project')">🗑</button></td></tr>`).join('')+`</tbody></table></div>`:'<div class="card empty">No projects for this client.</div>')+
-  `<h2 id="s-inv">Invoices</h2>`+(S.invoices.filter(i=>i.client==c.id).sort((a,b)=>a.date<b.date?1:-1).map(i=>`<div class="card rem"><div>${fd(i.date)} ${i.paid?pP('Received')+' '+fd(i.paidOn):pP('Invoice sent')}${i.disc||i.rush?`<div class="mut">${inr(i.sub)}${i.disc?` − ${inr(i.disc)} discount`:''}${i.rush?` + ${inr(i.rush)} rush fee`:''}</div>`:''}</div><div><b>${inr(i.total)}</b> <button class="g" onclick="pay('${i.id}',${!i.paid})">${i.paid?'Mark unpaid':'Mark paid'}</button><button class="t" onclick="editInv('${i.id}')">✏️ Edit</button><button class="t d" onclick="cancelInv('${i.id}')">Cancel</button></div></div>`).join('')||'<div class="card empty">No invoices yet.</div>');
+<h2 id="s-proj">Projects</h2><div class="bar"><button class="g" onclick="editProject()">＋ New project</button></div>`+(prs.length?`<div class="card wrap"><table><tbody>`+prs.map(p=>`<tr><td>${fd(p.date)}</td><td style="white-space:normal">${esc(p.name)}${R?` <span class="mut">· ${all.filter(e=>e.proj==p.id).length} deliverables</span>`:''}</td><td class="n">${inr(p.amount)}</td><td>${pS(p.status)}</td><td>${pP(p.payment)}${p.payment=='Received'&&p.paidMonth?` <span class="mut">${ml(p.paidMonth)}</span>`:''}</td><td><button class="t" onclick="editProject('${p.id}')">Edit</button><button class="t d" onclick="del('projects','${p.id}','project')">Delete</button></td></tr>`).join('')+`</tbody></table></div>`:'<div class="card empty">No projects for this client.</div>')+
+  `<h2 id="s-inv">Invoices</h2>`+(S.invoices.filter(i=>i.client==c.id).sort((a,b)=>a.date<b.date?1:-1).map(i=>`<div class="card rem"><div>${fd(i.date)} ${i.paid?pP('Received')+' '+fd(i.paidOn):pP('Invoice sent')}${i.disc||i.rush?`<div class="mut">${inr(i.sub)}${i.disc?` − ${inr(i.disc)} discount`:''}${i.rush?` + ${inr(i.rush)} rush fee`:''}</div>`:''}</div><div><b>${inr(i.total)}</b> <button class="g" onclick="pay('${i.id}',${!i.paid})">${i.paid?'Mark unpaid':'Mark paid'}</button><button class="t" onclick="editInv('${i.id}')">Edit</button><button class="t d" onclick="cancelInv('${i.id}')">Cancel</button></div></div>`).join('')||'<div class="card empty">No invoices yet.</div>');
 }
 
 /* ===== CLOUD SYNC (Firebase). Paste your Firebase web-app config object over `null` below. Leave null to use this device only. ===== */
@@ -227,16 +250,16 @@ let fdb=null,fuser=null,fq=Promise.resolve(),unsub=null,firstAttach=true;
 function acct(){const e=$('#acct');if(!e)return;e.innerHTML=!FB_CONFIG?'':fuser?`<span class="mut">${esc(fuser.email||'')}</span> <button class="g" onclick="signOut()">Sign out</button>`:`<button onclick="signIn()">Sign in</button>`}
 function cloudInit(){
   if(!FB_CONFIG)return;
-  if(!window.firebase){sv('⚠ Couldn\'t load sync — working on this device only',1);return}
+  if(!window.firebase){sv('Couldn\'t load sync — working on this device only',1);return}
   try{firebase.initializeApp(FB_CONFIG);fdb=firebase.firestore();
     firebase.auth().onAuthStateChanged(u=>{fuser=u;acct();if(u)cloudAttach();else{if(unsub)unsub();unsub=null;firstAttach=true;sv('Not signed in — saved on this device');render()}})}
-  catch(e){sv('⚠ Sync setup problem ('+(e.code||e.message)+')',1)}
+  catch(e){sv('Sync setup problem ('+(e.code||e.message)+')',1)}
   acct();
 }
 function signIn(){const a=firebase.auth(),p=new firebase.auth.GoogleAuthProvider();a.signInWithPopup(p).catch(e=>{if(e.code=='auth/popup-blocked'||e.code=='auth/operation-not-supported-in-this-environment')a.signInWithRedirect(p);else if(e.code!='auth/popup-closed-by-user')toast('Sign-in failed: '+(e.code||e.message))})}
 function signOut(){firebase.auth().signOut()}
 const dref=()=>fdb.collection('users').doc(fuser.uid).collection('tracker').doc('data');
-function adopt(d){S=Object.assign({clients:[],projects:[],entries:[],invoices:[],meta:{}},d);S.meta=S.meta||{};try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}render();sv('✓ Synced')}
+function adopt(d){S=Object.assign({clients:[],projects:[],entries:[],invoices:[],meta:{}},d);S.meta=S.meta||{};const c=migratePM();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}render();sv('✓ Synced');if(c)cloudPush()}
 function cloudAttach(){
   if(unsub)unsub();sv('Syncing…');
   unsub=dref().onSnapshot(snap=>{
@@ -250,16 +273,18 @@ function cloudAttach(){
       else cloudPush()}
     else sv('✓ Synced');
     firstAttach=false;
-  },e=>sv('⚠ Sync error ('+(e.code||e.message)+')',1));
+  },e=>sv('Sync error ('+(e.code||e.message)+')',1));
 }
 function cloudPush(){
   if(!fdb||!fuser)return;sv('Syncing…');const snap=JSON.parse(JSON.stringify(S));
-  fq=fq.then(()=>dref().set(snap)).then(()=>sv('✓ Synced')).catch(e=>sv('⚠ Not synced ('+(e.code||e.message)+')',1));
+  fq=fq.then(()=>dref().set(snap)).then(()=>sv('✓ Synced')).catch(e=>sv('Not synced ('+(e.code||e.message)+')',1));
 }
 
+const PM={"p1":"2025-06","p2":"2025-05","p8":"2025-07","p9":"2025-07","p10":"2025-06","p11":"2025-06","p12":"2025-07","p17":"2025-07","p18":"2025-07","p19":"2025-09","p29":"2025-09","p30":"2025-12","p32":"2025-09","p33":"2025-09","p34":"2025-10","p35":"2025-12","p37":"2025-12","p38":"2025-12","p39":"2025-11","p40":"2025-11","p41":"2025-11","p45":"2026-02","p46":"2026-06","p47":"2026-02","p48":"2026-03","p49":"2026-02","p50":"2026-04","p51":"2026-04","p53":"2026-06","p54":"2026-06","p56":"2026-06","p57":"2026-08","p60":"2026-08","p63":"2026-08","p64":"2026-07","p65":"2026-07","p70":"2026-09","p71":"2026-10","p73":"2026-10","p74":"2026-10"};
+function migratePM(){if(S.meta.pm1)return false;S.projects.forEach(p=>{if(PM[p.id]&&!p.paidMonth&&p.payment=='Received')p.paidMonth=PM[p.id]});S.meta.pm1=1;S.meta.updatedAt=Date.now();return true}
 function boot(){
-  S.meta=S.meta||{};['clients','projects','entries','invoices'].forEach(k=>S[k]=S[k]||[]);sync();cloudInit();
-  sv(mem?'⚠ Not saved — your browser is blocking storage':'✓ Saved on this device',mem);route();
+  S.meta=S.meta||{};['clients','projects','entries','invoices'].forEach(k=>S[k]=S[k]||[]);migratePM();sync();cloudInit();
+  sv(mem?'Not saved — your browser is blocking storage':'✓ Saved on this device',mem);route();
 }
 boot();
 </script></body></html>
