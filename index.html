@@ -3,9 +3,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Studio Tracker</title>
 <style>
-:root{--bg:#faf8f5;--card:#fff;--ink:#1d1b19;--mut:#7a746c;--line:#e8e3dc;--acc:#e4572e;--ok:#2e8b57;--warn:#d98e04;--bad:#c0392b}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#171513;--card:#211e1b;--ink:#f2eee8;--mut:#9b948a;--line:#34302b}}
-:root[data-theme="dark"]{--bg:#171513;--card:#211e1b;--ink:#f2eee8;--mut:#9b948a;--line:#34302b}
+:root{--bg:#faf8f3;--card:#ffffff;--ink:#1c2333;--mut:#6f7380;--line:#e6e2d8;--acc:#1d2f5d;--ok:#2e8b57;--warn:#d98e04;--bad:#c0392b}
+
+
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,'Segoe UI',sans-serif}
 main,header{max-width:1020px;margin:0 auto;padding:12px 16px}
 h1{font-size:20px;margin:0}h2{font-size:16px;margin:24px 0 8px}h3{margin:0 0 12px}
@@ -16,7 +16,7 @@ button{background:var(--acc);color:#fff;border:0;border-radius:8px;padding:7px 1
 button:hover{filter:brightness(1.08)}button:disabled{opacity:.4;cursor:default}
 button.g{background:transparent;color:var(--ink);border:1px solid var(--line)}button .tag{color:var(--ink)}button.t{background:transparent;color:var(--mut);padding:4px 7px}
 button.t:hover{color:var(--ink)}button.d:hover{color:var(--bad)}
-nav button{background:transparent;color:var(--mut);border:1px solid var(--line)}nav button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+nav button{background:transparent;color:var(--mut);border:1px solid var(--line)}nav button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
 select,input{background:var(--card);border:1px solid var(--line);border-radius:7px;padding:6px 8px}
 :focus-visible{outline:2px solid var(--acc);outline-offset:1px}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
@@ -57,15 +57,32 @@ select.pill{padding:4px 8px;cursor:pointer}option{background:var(--card);color:v
 .menu.g summary{background:transparent;color:var(--ink);border:1px solid var(--line)}.menu>div{align-items:stretch}#sv{font-size:12px}
 .big{font-size:24px}.tabs{display:flex;gap:4px;margin:18px 0 10px;border-bottom:1px solid var(--line)}.tabs button{background:transparent;color:var(--mut);border:0;border-bottom:2px solid transparent;border-radius:0;padding:8px 12px}.tabs button.on{color:var(--ink);border-bottom-color:var(--acc);font-weight:600}
 .rrow{display:grid;grid-template-columns:1fr 110px;gap:6px;margin-bottom:6px}.rrow input{margin:0}.over-t{color:var(--bad)}dialog{max-height:90vh;overflow:auto}.chips{margin-top:0}
+.rrow2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.rrow2 label{margin-bottom:8px}textarea{font:inherit;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:7px;padding:6px 8px;width:100%;margin-top:3px;resize:vertical}
+#invwrap{position:fixed;inset:0;background:var(--bg);z-index:30;overflow:auto}#invwrap[hidden]{display:none}
+.inv-top{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:2}
+.inv-body{display:grid;grid-template-columns:minmax(300px,380px) minmax(0,1fr);gap:18px;padding:16px;max-width:1240px;margin:0 auto}@media(max-width:860px){.inv-body{grid-template-columns:1fr}}
+#sheetbox{width:100%;overflow:hidden}
+#sheet{width:794px;height:1123px;box-sizing:border-box;background:#f5f5ef;color:#111;font:15px/1.5 Inter,system-ui,-apple-system,sans-serif;padding:76px 79px 77px;display:flex;flex-direction:column;transform-origin:top left;box-shadow:0 1px 10px #0003;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+#sheet .r{text-align:right}#sheet .c{text-align:center}
+.sh-head{display:flex;justify-content:space-between;align-items:flex-start;height:69px}.sh-head img{height:69px;width:auto}.sh-biz{font-size:22px}
+.sh-inv{font-family:'Bodoni Moda','Playfair Display',Didot,Georgia,serif;font-size:54px;line-height:1;letter-spacing:-.01em;font-weight:400;margin-top:2px}
+.sh-meta{display:flex;justify-content:space-between;gap:20px;margin-top:56px}.sh-lab{font-weight:700;text-transform:uppercase;margin-bottom:2px}
+.sh-t{width:100%;min-width:0;table-layout:fixed;border-collapse:collapse}.sh-meta+.sh-t{margin-top:56px}
+.sh-t th,.sh-t td{box-sizing:border-box;padding:14px 14px;font-size:14px;line-height:21px;white-space:normal;border-bottom:1px solid #111;text-align:left;height:49px;vertical-align:middle}.sh-t th{font-weight:700;border-top:1px solid #111}
+.sh-t td.c,.sh-t th.c{text-align:center}.sh-s{margin-top:14px}.sh-s td{border:0;height:46px}.sh-s .lb{font-weight:700}.sh-s .gt td{height:56px;font-size:18px;font-weight:700}.sh-s .gt td:nth-child(3),.sh-s .gt td:nth-child(4){border-top:1px solid #111}
+.sh-sp{flex:1}.sh-thx{font-size:26px;line-height:1.3;margin-bottom:36px}
+.sh-foot{display:flex;justify-content:space-between;align-items:flex-end;gap:20px}.sh-sig{font-family:'Bodoni Moda','Playfair Display',Didot,Georgia,serif;font-size:24px;line-height:1.2}.sh-st{font-size:14px}
+@media print{body>*:not(#invwrap){display:none!important}#invwrap{position:static;overflow:visible;background:#f5f5ef}.inv-ui{display:none!important}.inv-body{display:block;padding:0;max-width:none}#sheetbox{height:auto!important;overflow:visible}#sheet{transform:none!important;box-shadow:none;margin:0}html,body{background:#f5f5ef!important}@page{size:A4;margin:0}}
 </style><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;500&family=Inter:wght@400;700&display=swap" rel="stylesheet">
 </head><body>
 <header><div class="top"><h1>Studio Tracker</h1><div class="bar" style="margin:0"><span id="sv" class="mut"></span>
-<details id="newm" class="menu"><summary>+ New</summary><div><button class="g" onclick="nw('project')">Project</button><button class="g" onclick="nw('client')">Client</button><button class="g" onclick="nw('entry')">Work entry</button></div></details>
-<details id="morem" class="menu g"><summary>More</summary><div><span id="acct"></span><button class="g" onclick="exp();$('#morem').open=false">Backup</button><button class="g" onclick="$('#imp').click();$('#morem').open=false">Restore</button></div></details>
+<details id="newm" class="menu"><summary>+ New</summary><div><button class="g" onclick="nw('project')">Project</button><button class="g" onclick="nw('client')">Client</button><button class="g" onclick="nw('entry')">Work entry</button><button class="g" onclick="nw('invoice')">Invoice</button></div></details>
+<details id="morem" class="menu g"><summary>More</summary><div><span id="acct"></span><button class="g" onclick="editSettings();$('#morem').open=false">Invoice settings</button><button class="g" onclick="exportCsv();$('#morem').open=false">Export CSV</button><button class="g" onclick="exp();$('#morem').open=false">Backup</button><button class="g" onclick="$('#imp').click();$('#morem').open=false">Restore</button></div></details>
 <input type="file" id="imp" accept=".json" hidden onchange="imp(this)"></div></div><nav id="nav"></nav></header>
-<main id="app"></main><dialog id="dlg"></dialog><div id="toast"></div>
+<main id="app"></main><div id="invwrap" hidden></div><dialog id="dlg"></dialog><div id="toast"></div>
 <script>
 const $=s=>document.querySelector(s),uid=()=>Math.random().toString(36).slice(2,9);
 const inr=n=>'₹'+Math.round(n||0).toLocaleString('en-IN');
@@ -98,7 +115,7 @@ function save(){
   cloudPush();render()}
 function toast(m,undo){const t=$('#toast');t.innerHTML=esc(m)+(undo?' <button id="un">Undo</button>':'');t.style.display='flex';clearTimeout(tt);tt=setTimeout(()=>t.style.display='none',6000);if(undo)$('#un').onclick=()=>{undo();t.style.display='none'}}
 function exp(){S.meta.lastBackup=today();const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,1)],{type:'application/json'}));a.download='studio-tracker-backup-'+today()+'.json';a.click();save();toast('Backup downloaded — keep it somewhere safe')}
-function imp(el){const f=el.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.clients||!d.projects)throw 0;d.entries=d.entries||[];d.invoices=d.invoices||[];S=d;S.meta=S.meta||{};save();toast('Backup restored')}catch(e){toast('That file doesn\'t look like a Studio Tracker backup.')}el.value=''};r.readAsText(f)}
+function imp(el){const f=el.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.clients||!d.projects)throw 0;d.entries=d.entries||[];d.invoices=d.invoices||[];S=d;S.meta=S.meta||{};fixS();save();toast('Backup restored')}catch(e){toast('That file doesn\'t look like a Studio Tracker backup.')}el.value=''};r.readAsText(f)}
 function bill(cid){return[...S.projects.filter(p=>p.client==cid&&p.status=='Completed'&&!p.invoiced&&p.amount>0).map(p=>({id:p.id,k:'p',date:p.date,amt:+p.amount})),
  ...S.entries.filter(e=>e.client==cid&&!e.invoiced&&!((S.clients.find(c=>c.id==cid)||{}).retainer)).map(e=>({id:e.id,k:'e',date:e.date,amt:e.qty*e.rate}))]}
 function due(c){const b=bill(c.id);if(!b.length)return null;if(c.cycle=='project')return b.some(x=>x.k=='p')?today():null;
@@ -175,7 +192,157 @@ function showP(f,s){pf={m:'all',c:'all',s:s||'All',q:'',f:f};go('proj')}
 function clearF(){pf={m:'all',c:'all',s:'All',q:'',f:'all'};render()}
 function jump(id){const e=document.getElementById(id);if(e)e.scrollIntoView({behavior:'smooth',block:'start'})}
 function setLink(id,pid){const e=S.entries.find(x=>x.id==id),p=S.projects.find(x=>x.id==pid);e.proj=pid;if(p)e.date=p.date;save()}
-function nw(k){$('#newm').open=false;if(k=='project')editProject();else if(k=='client')editClient();else if(view=='client'&&cur)editEntry();else if(!S.clients.length)toast('Add a client first.');else form('Add work entry for…',[{k:'client',l:'Which client?',v:S.clients[0].id,o:S.clients.map(c=>[c.id,c.name])}],v=>editEntry(null,v.client))}
+const UNIT={"c17": "Sheets", "c24": "Outputs"},ITEM={"c17": "File Sets"};
+let B=null;
+const DEF_SET={name:'',title:'Graphic Designer',pay:'',extra:'',logo:'',prefix:'INV',next:1,notes:'Thank you for your business!',showNo:false,taxNA:true};
+function fixS(){S.settings=Object.assign({},DEF_SET,S.settings||{});S.clients.forEach(c=>{if(!c.unit&&UNIT[c.id])c.unit=UNIT[c.id];if(!c.itemName&&ITEM[c.id])c.itemName=ITEM[c.id]})}
+const pad=n=>String(n).padStart(3,'0'),n0=n=>Math.round(n||0).toLocaleString('en-IN');
+const fmtNum=n=>`${S.settings.prefix||'INV'}-${new Date().getFullYear()}-${pad(n)}`;
+const sugNum=()=>{let n=+S.settings.next||1;const used=new Set(S.invoices.map(i=>i.number));while(used.has(fmtNum(n)))n++;return fmtNum(n)};
+const numBump=num=>{const m=String(num).match(/(\d+)$/);S.settings.next=Math.max(+S.settings.next||1,(m?+m[1]:0)+1)};
+const ordd=d=>{const x=new Date(d+'T00:00'),n=x.getDate(),s=(n%10==1&&n!=11)?'st':(n%10==2&&n!=12)?'nd':(n%10==3&&n!=13)?'rd':'th';return`${n}<sup>${s}</sup> ${x.toLocaleDateString('en-GB',{month:'long'})}, ${x.getFullYear()}`};
+function monthsText(ds){
+  const ms=[...new Set(ds.map(d=>d.slice(0,7)))].sort();if(!ms.length)return'';
+  const nm=m=>new Date(m+'-01T00:00').toLocaleDateString('en-GB',{month:'long'}),ys=[...new Set(ms.map(m=>m.slice(0,4)))];
+  const join=a=>a.length<2?a.join(''):a.slice(0,-1).join(', ')+' & '+a[a.length-1];
+  return ys.length==1?join(ms.map(nm))+', '+ys[0]:join(ms.map(m=>nm(m)+' '+m.slice(0,4)));
+}
+function cands(cid){
+  const c=S.clients.find(x=>x.id==cid),mo=c.billing=='fixed'||c.billing=='variable',un=new Set(bill(cid).map(x=>x.k+':'+x.id));
+  const l=[...S.projects.filter(p=>p.client==cid&&p.amount>0).map(p=>({k:'p:'+p.id,date:p.date,desc:p.name,qty:1,rate:+p.amount,amt:+p.amount})),
+   ...S.entries.filter(e=>e.client==cid&&e.rate>0).map(e=>({k:'e:'+e.id,date:e.date,desc:e.desc,qty:e.qty,rate:e.rate,amt:e.qty*e.rate}))];
+  l.forEach(x=>x.un=un.has(x.k));return l.sort((a,b)=>a.date<b.date?1:-1);
+}
+function openInv(cid,invId){
+  const c=S.clients.find(x=>x.id==cid);if(!c)return;fixS();
+  const rec=invId&&S.invoices.find(x=>x.id==invId),cd=cands(cid);
+  const keep=rec&&(rec.e||[]).length?(rec.p||[]):[],sel=new Set(rec?[...(rec.p||[]).filter(x=>!keep.includes(x)).map(x=>'p:'+x),...(rec.e||[]).map(x=>'e:'+x)]:cd.filter(x=>x.un).map(x=>x.k));
+  B={cid,keep,sug:sugNum(),invId:rec?rec.id:null,sel,custom:rec&&rec.custom?rec.custom.map(x=>({...x})):[],cd,svcManual:!!(rec&&rec.service)};
+  const bt=rec&&rec.billTo!=null?rec.billTo:(c.billTo||[c.contact,c.name].filter(Boolean).filter((x,i,a)=>a.indexOf(x)==i).join('\n')),w=$('#invwrap');
+  const svc=rec&&rec.service!=null?rec.service:monthsText(cd.filter(x=>sel.has(x.k)).map(x=>x.date));
+  w.innerHTML=`<div class="inv-top inv-ui"><b>${rec?'Invoice':'New invoice'} · ${esc(c.name)}</b><div class="bar" style="margin:0"><button class="g" onclick="closeInv()">Close</button><button onclick="downloadInv()">Download PDF</button></div></div>
+<div class="inv-body"><div class="inv-ui inv-form">
+<label>Billed to<textarea id="iv-bt" rows="3">${esc(bt)}</textarea></label>
+<div class="rrow2"><label>Billing date<input id="iv-date" type="date" value="${rec?rec.date:today()}"></label><label>Month(s) of service<input id="iv-svc" value="${esc(svc)}"></label></div>
+<div class="rrow2"><label>Show items from<select id="iv-month"><option value="all">All months</option></select></label><label>Quantity heading<input id="iv-unit" value="${esc(c.unit||'Qty')}"></label></div>
+<label>Item name for work billed by rate<input id="iv-item" value="${esc(c.itemName||'')}" placeholder="e.g. File Sets (blank = use each entry's category)"></label>
+<div id="iv-list" class="card wrap" style="max-height:240px;overflow:auto;padding:6px 10px"></div>
+<div class="rrow2" style="margin-top:8px"><label>Extra line<input id="iv-cd" placeholder="Description"></label><label>Amount<input id="iv-ca" type="number" placeholder="Rs"></label></div><button class="g" onclick="addCustom()">Add line</button><div id="iv-cl"></div>
+<div class="rrow2" style="margin-top:10px"><label>Discount<input id="iv-disc" type="number" min="0" value="${rec?rec.disc||0:0}"></label><label>Rush fee<input id="iv-rush" type="number" min="0" value="${rec?rec.rush||0:0}"></label></div>
+<div class="rrow2"><label>Advance paid<input id="iv-adv" type="number" min="0" value="${rec?rec.adv||0:0}"></label><label>Invoice no.<input id="iv-num" value="${esc(rec&&rec.number||sugNum())}"></label></div>
+<label>Closing line<input id="iv-notes" value="${esc(rec&&rec.notes!=null?rec.notes:S.settings.notes)}"></label>
+${rec?'':`<label style="display:flex;gap:8px;align-items:center;color:var(--ink)"><input type="checkbox" id="iv-mark" checked style="width:auto;margin:0"> Mark selected items as invoiced</label>`}
+<div class="mut">Download PDF opens the print window. Choose "Save as PDF".</div></div><div id="sheetbox"><div id="sheet"></div></div></div>`;
+  w.hidden=false;document.body.style.overflow='hidden';
+  const ms=[...new Set(cd.map(x=>x.date.slice(0,7)))].sort().reverse();$('#iv-month').innerHTML='<option value="all">All months</option>'+ms.map(m=>`<option value="${m}">${ml(m)}</option>`).join('');
+  w.oninput=w.onchange=e=>{const t=e.target,k=t.dataset&&t.dataset.k;if(k){t.checked?B.sel.add(k):B.sel.delete(k);if(!B.svcManual)$('#iv-svc').value=monthsText(B.cd.filter(x=>B.sel.has(x.k)).map(x=>x.date))}if(t.id=='iv-svc')B.svcManual=true;if(t.id=='iv-month')invList();invPrev()};
+  invList();invCl();invPrev();
+}
+function invList(){
+  const m=$('#iv-month').value,l=B.cd.filter(x=>m=='all'||x.date.slice(0,7)==m);
+  $('#iv-list').innerHTML=l.length?l.map(x=>`<label style="display:flex;gap:8px;align-items:center;margin:0;padding:5px 0;color:var(--ink);border-bottom:1px solid var(--line)"><input type="checkbox" data-k="${x.k}" ${B.sel.has(x.k)?'checked':''} style="width:auto;margin:0"><span style="flex:1;font-size:13px">${esc(x.desc)}<span class="mut"> · ${fd(x.date)}${x.un?'':' · invoiced'}</span></span><b style="font-size:13px">${inr(x.amt)}</b></label>`).join(''):'<div class="mut" style="padding:8px 0">Nothing priced for this client yet. Use "Extra line".</div>';
+}
+function invCl(){$('#iv-cl').innerHTML=B.custom.map((x,i)=>`<div class="srow"><span>${esc(x.desc)}</span><span>${inr(x.amount)} <button class="t d" onclick="delCustom(${i})">Remove</button></span></div>`).join('')}
+function addCustom(){const d=$('#iv-cd').value.trim(),a=+$('#iv-ca').value;if(!d||!a)return toast('Enter a description and an amount');B.custom.push({desc:d,amount:a});$('#iv-cd').value=$('#iv-ca').value='';invCl();invPrev()}
+function delCustom(i){B.custom.splice(i,1);invCl();invPrev()}
+function invVals(){const g=id=>$('#'+id).value;return{num:g('iv-num').trim(),date:g('iv-date'),disc:+g('iv-disc')||0,rush:+g('iv-rush')||0,adv:+g('iv-adv')||0,bt:g('iv-bt'),svc:g('iv-svc'),unit:g('iv-unit').trim()||'Qty',item:g('iv-item').trim(),notes:g('iv-notes')}}
+function invRows(v){
+  const rows=[],gp={};B.cd.filter(x=>B.sel.has(x.k)).sort((a,b)=>a.date<b.date?-1:1).forEach(x=>{
+    if(x.k[0]=='e'){const cat=v.item||x.desc.split(' – ')[0].trim(),key=cat+'|'+x.rate;if(!gp[key]){gp[key]={desc:cat,qty:0,rate:x.rate,amt:0,ent:1};rows.push(gp[key])}gp[key].qty+=x.qty;gp[key].amt+=x.amt}
+    else rows.push({desc:x.desc,qty:1,rate:x.rate,amt:x.amt})});
+  B.custom.forEach(x=>rows.push({desc:x.desc,qty:1,rate:x.amount,amt:x.amount}));
+  rows.sort((a,b)=>(a.ent&&b.ent)?a.rate-b.rate:0);let left=v.adv;rows.forEach(r=>{r.advp=Math.min(left,r.amt);left-=r.advp;r.bal=r.amt-r.advp});return rows;
+}
+function invPrev(){
+  const v=invVals(),rows=invRows(v),s=S.settings,lay=v.adv>0?'adv':rows.some(r=>r.ent)?'qty':'simple';
+  const head={simple:['Item','','','Total'],qty:['Item',v.unit,'Rate','Total'],adv:['Item','Project Fee','Advance Paid','Balance Payable']}[lay];
+  const cell=r=>({simple:[r.desc,'','',n0(r.amt)],qty:[r.desc,r.qty,n0(r.rate),n0(r.amt)],adv:[r.desc,n0(r.amt),n0(r.advp),n0(r.bal)]}[lay]);
+  const body=rows.map(r=>cell(r));while(body.length<3)body.push(['','','','']);
+  const sub=rows.reduce((a,r)=>a+(lay=='adv'?r.bal:r.amt),0),tot=sub-v.disc+v.rush,pl=t=>esc(t).replace(/\n/g,'<br>');
+  const ext=[];if(v.disc)ext.push(['Discount','('+n0(v.disc)+')']);if(v.rush)ext.push(['Rush fee',n0(v.rush)]);if(!ext.length&&s.taxNA)ext.push(['Tax','N/A']);
+  const cg='<colgroup><col style="width:46%"><col style="width:17.5%"><col style="width:17.5%"><col style="width:19%"></colgroup>';
+  const months=(v.svc.match(/ & |, /g)||[]).length>0;
+  $('#sheet').innerHTML=`<div class="sh-head">${s.logo?`<img src="${s.logo}" alt="">`:`<b class="sh-biz">${esc(s.name)}</b>`}<div class="sh-inv">INVOICE</div></div>
+<div class="sh-meta"><div><div class="sh-lab">Billed to:</div><div>${pl(v.bt)}</div></div><div class="r"><div class="sh-lab">Billing date</div><div>${ordd(v.date)}</div>${v.svc?`<div class="sh-lab" style="margin-top:28px">${months?'Months':'Month'} of service</div><div>${esc(v.svc)}</div>`:''}${s.showNo&&v.num?`<div class="sh-lab" style="margin-top:28px">Invoice no.</div><div>${esc(v.num)}</div>`:''}</div></div>
+<table class="sh-t">${cg}<thead><tr>${head.map((h,i)=>`<th class="${i?'c':''}">${esc(h)}</th>`).join('')}</tr></thead><tbody>${body.map(r=>`<tr>${r.map((x,i)=>`<td class="${i?'c':''}">${esc(x)}</td>`).join('')}</tr>`).join('')}</tbody></table>
+<table class="sh-t sh-s">${cg}<tbody><tr><td></td><td></td><td class="c lb">Subtotal</td><td class="c">${n0(sub)}</td></tr>${ext.map(e=>`<tr><td></td><td></td><td class="c lb">${e[0]}</td><td class="c">${e[1]}</td></tr>`).join('')}<tr class="gt"><td></td><td></td><td class="c lb">Total(INR)</td><td class="c lb">${n0(tot)}</td></tr></tbody></table>
+<div class="sh-sp"></div><div class="sh-thx">${esc(v.notes)}</div>
+<div class="sh-foot"><div>${s.pay?`<div class="sh-lab">Payment information</div><div>${pl(s.pay)}</div>`:''}${s.extra?`<div style="margin-top:8px">${pl(s.extra)}</div>`:''}</div><div class="r"><div class="sh-sig">${esc(s.name)}</div><div class="sh-st">${esc(s.title)}</div></div></div>`;
+  fitSheet();
+}
+function fitSheet(){const b=$('#sheetbox'),k=b&&b.clientWidth?Math.min(1,b.clientWidth/794):1;$('#sheet').style.transform=`scale(${k})`;b.style.height=Math.round(1123*k)+'px'}
+function saveInv(){
+  const v=invVals(),rows=invRows(v),gross=rows.reduce((a,r)=>a+r.amt,0),p=[],e=[];B.sel.forEach(k=>{const[t,id]=k.split(':');(t=='p'?p:e).push(id)});
+  let rec=B.invId&&S.invoices.find(x=>x.id==B.invId);const mk=$('#iv-mark'),c=S.clients.find(x=>x.id==B.cid);
+  const base={number:v.num,date:v.date,notes:v.notes,billTo:v.bt,service:v.svc,custom:B.custom.map(x=>({...x})),sub:gross,adv:v.adv,disc:v.disc,rush:v.rush,total:gross-v.adv-v.disc+v.rush,p,e};
+  c.billTo=v.bt;c.unit=v.unit;c.itemName=v.item;p.push(...B.keep.filter(x=>!p.includes(x)));
+  const had=rec&&rec.number;if(rec){(rec.p||[]).filter(x=>!p.includes(x)).forEach(id=>{const o=S.projects.find(y=>y.id==id);if(o){o.invoiced=false;if(o.payment=='Invoice sent')o.payment='Pending'}});(rec.e||[]).filter(x=>!e.includes(x)).forEach(id=>{const o=S.entries.find(y=>y.id==id);if(o)o.invoiced=false});Object.assign(rec,base);if(!had&&v.num==B.sug)numBump(v.num)}
+  else if(mk&&mk.checked&&(p.length||e.length||B.custom.length)){rec={id:uid(),client:B.cid,paid:false,...base};S.invoices.push(rec);if(v.num==B.sug)numBump(v.num);B.invId=rec.id}
+  if(rec){p.forEach(id=>{const o=S.projects.find(y=>y.id==id);if(o){o.invoiced=true;if(o.payment=='Pending')o.payment='Invoice sent'}});e.forEach(id=>{const o=S.entries.find(y=>y.id==id);if(o)o.invoiced=true})}
+  save();
+}
+function downloadInv(){
+  if(!invRows(invVals()).length)return toast('Select at least one item or add a line');
+  saveInv();const t0=document.title,c=S.clients.find(x=>x.id==B.cid);document.title=(invVals().num+' '+c.name).replace(/[\\/:*?"<>|]/g,'-');
+  window.onafterprint=()=>{document.title=t0;window.onafterprint=null};window.print();
+}
+function closeInv(){$('#invwrap').hidden=true;document.body.style.overflow='';B=null}
+addEventListener('resize',()=>{if(B)fitSheet()});
+function editSettings(){
+  fixS();const s=S.settings,d=$('#dlg');let lg=s.logo;d.oninput=d.onchange=d.onkeydown=null;
+  d.innerHTML=`<h3>Invoice settings</h3><div class="rrow2"><label>Your name (signature)<input id="s-name" value="${esc(s.name)}"></label><label>Title<input id="s-title" value="${esc(s.title)}"></label></div>
+<label>Logo<input id="s-logo" type="file" accept="image/*"></label><div id="s-lp" style="margin-bottom:8px"></div>
+<label>Payment information<textarea id="s-pay" rows="5" placeholder="Bank name&#10;Account name&#10;Account no.&#10;IFSC&#10;UPI">${esc(s.pay)}</textarea></label><label>Extra line (PAN / GST, optional)<input id="s-extra" value="${esc(s.extra)}"></label>
+<label>Closing line<input id="s-notes" value="${esc(s.notes)}"></label><div class="rrow2"><label>Number prefix<input id="s-prefix" value="${esc(s.prefix)}"></label><label>Next number<input id="s-next" type="number" min="1" value="${esc(s.next)}"></label></div>
+<label style="display:flex;gap:8px;align-items:center;color:var(--ink)"><input type="checkbox" id="s-showno" ${s.showNo?'checked':''} style="width:auto;margin:0"> Print invoice number on the PDF</label>
+<label style="display:flex;gap:8px;align-items:center;color:var(--ink)"><input type="checkbox" id="s-tax" ${s.taxNA?'checked':''} style="width:auto;margin:0"> Show "Tax N/A" when there is no discount</label>
+<div class="row"><button class="g" id="cx">Cancel</button><button id="ok">Save</button></div>`;
+  d.showModal();$('#cx').onclick=()=>d.close();
+  const lp=()=>{$('#s-lp').innerHTML=lg?`<img src="${lg}" style="max-height:48px"> <button class="t d" id="s-lx">Remove</button>`:'';const x=$('#s-lx');if(x)x.onclick=()=>{lg='';lp()}};lp();
+  $('#s-logo').onchange=ev=>{const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{try{const k=Math.min(1,380/im.height),cv=document.createElement('canvas');cv.width=im.width*k;cv.height=im.height*k;const cx=cv.getContext('2d');cx.drawImage(im,0,0,cv.width,cv.height);let u=cv.toDataURL('image/png');if(u.length>180000){cx.globalCompositeOperation='destination-over';cx.fillStyle='#f5f5ef';cx.fillRect(0,0,cv.width,cv.height);u=cv.toDataURL('image/jpeg',.85)}lg=u;lp()}catch(e){toast('Could not use that image')}};im.src=r.result};r.readAsDataURL(f)};
+  $('#ok').onclick=()=>{const g=id=>$('#'+id).value;Object.assign(S.settings,{name:g('s-name').trim(),title:g('s-title').trim(),pay:g('s-pay').trim(),extra:g('s-extra').trim(),logo:lg,prefix:g('s-prefix').trim()||'INV',next:+g('s-next')||1,notes:g('s-notes').trim(),showNo:$('#s-showno').checked,taxNA:$('#s-tax').checked});d.close();save();toast('Invoice settings saved')};
+}
+function nw(k){
+  $('#newm').open=false;if(k=='project')return editProject();if(k=='client')return editClient();
+  if(view=='client'&&cur)return k=='invoice'?openInv(cur):editEntry();
+  if(!S.clients.length)return toast('Add a client first.');
+  form(k=='invoice'?'Create invoice for':'Add work entry for',[{k:'client',l:'Client',v:S.clients[0].id,o:S.clients.map(c=>[c.id,c.name])}],v=>k=='invoice'?openInv(v.client):editEntry(null,v.client));
+}
+const csvEsc=v=>{v=v==null?'':String(v);return /[",\n\r]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};
+const toCsv=(h,rows)=>'\uFEFF'+[h,...rows].map(r=>r.map(csvEsc).join(',')).join('\r\n');
+function csvSets(){
+  const cl=id=>S.clients.find(c=>c.id==id)||{},byD=(a,b)=>a.date<b.date?-1:a.date>b.date?1:0;
+  const invOf=e=>S.invoices.find(i=>(i.e||[]).includes(e.id)),pn=id=>{const p=S.projects.find(x=>x.id==id);return p?p.name+' ('+p.date.slice(0,7)+')':''};
+  const rec=S.projects.filter(p=>p.payment=='Received'&&p.amount>0),unset=rec.filter(p=>!p.paidMonth);
+  const ms=[...new Set([...S.projects.map(p=>p.date.slice(0,7)),...rec.filter(p=>p.paidMonth).map(p=>p.paidMonth)])].sort();
+  return{
+    projects:toCsv(['Date','Client','Project','Amount','Status','Payment','Paid in','Timeline','Invoiced'],S.projects.slice().sort(byD).map(p=>[p.date,cl(p.client).name,p.name,p.amount||0,p.status,p.payment,p.paidMonth||'',p.duration||'',p.invoiced?'Yes':'No'])),
+    entries:toCsv(['Date','Client','Description','Qty','Rate','Amount','Linked to','Invoiced','Invoice date','Invoice total'],S.entries.slice().sort(byD).map(e=>{const i=invOf(e);return[e.date,cl(e.client).name,e.desc,e.qty,e.rate||0,(e.qty||0)*(e.rate||0),pn(e.proj),e.invoiced?'Yes':'No',i?i.date:'',i?i.total:'']})),
+    invoices:toCsv(['Number','Date','Client','Month(s) of service','Subtotal','Advance','Discount','Rush fee','Total','Status','Paid on','Billed to'],S.invoices.slice().sort(byD).map(i=>[i.number||'',i.date,cl(i.client).name,i.service||'',i.sub||0,i.adv||0,i.disc||0,i.rush||0,i.total||0,i.paid?'Paid':'Awaiting payment',i.paidOn||'',i.billTo||''])),
+    clients:toCsv(['Client','Contact','Billing type','Pricing','Fixed amount','Rate card','Invoice reminder','Quantity heading','Billed to'],S.clients.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(c=>[c.name,c.contact||'',BLs[c.billing]||'',c.pricing==='ratecard'?'Rate card':c.pricing==='work'?(c.billing=='variable'?'Month-end amount':'Priced by work'):'',c.amount||'',(c.rates||[]).map(r=>r.name+' '+r.amount).join('; '),CYC[c.cycle]||'',c.unit||'',c.billTo||''])),
+    summary:toCsv(['Month','Received','Payments received','Projects started','Started and completed'],[...ms.map(m=>{const e=rec.filter(p=>p.paidMonth==m),s=S.projects.filter(p=>p.date.slice(0,7)==m);return[m,e.reduce((a,p)=>a+p.amount,0),e.length,s.length,s.filter(p=>p.status=='Completed').length]}),...(unset.length?[['Month not set',unset.reduce((a,p)=>a+p.amount,0),unset.length,'','']]:[])])
+  };
+}
+const CSVN={projects:['Projects','Every project with status, payment and month paid'],entries:['Work entries','Work and deliverables, with rate, amount and invoice'],invoices:['Invoices','Numbers, totals, discounts and paid status'],clients:['Clients','Billing type, rate cards and reminders'],summary:['Monthly summary','Earnings by month received, plus projects started']};
+function crc32(u){let c;if(!crc32.t){crc32.t=[];for(let n=0;n<256;n++){c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;crc32.t[n]=c}}let r=-1;for(let i=0;i<u.length;i++)r=crc32.t[(r^u[i])&255]^(r>>>8);return(r^-1)>>>0}
+function zipBlob(files){
+  const enc=new TextEncoder(),parts=[],cen=[],d=new Date();let off=0;const dt=(d.getHours()<<11)|(d.getMinutes()<<5)|(d.getSeconds()>>1),dd=((d.getFullYear()-1980)<<9)|((d.getMonth()+1)<<5)|d.getDate();
+  files.forEach(f=>{const nm=enc.encode(f.name),sz=f.data.length,crc=crc32(f.data),lh=new DataView(new ArrayBuffer(30));
+    lh.setUint32(0,0x04034b50,true);lh.setUint16(4,20,true);lh.setUint16(6,0x0800,true);lh.setUint16(10,dt,true);lh.setUint16(12,dd,true);lh.setUint32(14,crc,true);lh.setUint32(18,sz,true);lh.setUint32(22,sz,true);lh.setUint16(26,nm.length,true);
+    parts.push(lh.buffer,nm,f.data);
+    const ch=new DataView(new ArrayBuffer(46));ch.setUint32(0,0x02014b50,true);ch.setUint16(4,20,true);ch.setUint16(6,20,true);ch.setUint16(8,0x0800,true);ch.setUint16(12,dt,true);ch.setUint16(14,dd,true);ch.setUint32(16,crc,true);ch.setUint32(20,sz,true);ch.setUint32(24,sz,true);ch.setUint16(28,nm.length,true);ch.setUint32(42,off,true);
+    cen.push(ch.buffer,nm);off+=30+nm.length+sz});
+  const cs=cen.reduce((a,b)=>a+b.byteLength,0),end=new DataView(new ArrayBuffer(22));end.setUint32(0,0x06054b50,true);end.setUint16(8,files.length,true);end.setUint16(10,files.length,true);end.setUint32(12,cs,true);end.setUint32(16,off,true);
+  return new Blob([...parts,...cen,end.buffer],{type:'application/zip'});
+}
+function dlBlob(name,blob){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),3000)}
+function dlCsv(k){const s=csvSets();if(k=='all'){const enc=new TextEncoder();dlBlob('studio-tracker-export-'+today()+'.zip',zipBlob(Object.keys(s).map(n=>({name:'studio-tracker-'+n+'.csv',data:enc.encode(s[n])}))));toast('Downloaded all as a ZIP')}else{dlBlob('studio-tracker-'+k+'-'+today()+'.csv',new Blob([s[k]],{type:'text/csv;charset=utf-8'}));toast(CSVN[k][0]+' downloaded')}}
+function exportCsv(){
+  const d=$('#dlg');d.oninput=d.onchange=d.onkeydown=null;
+  d.innerHTML=`<h3>Export as CSV</h3>${Object.keys(CSVN).map(k=>`<div class="srow" style="align-items:center"><span><b>${CSVN[k][0]}</b><br><span class="mut">${CSVN[k][1]}</span></span><button class="g" onclick="dlCsv('${k}')">Download</button></div>`).join('')}<div class="row"><button class="g" id="cx">Close</button><button onclick="dlCsv('all')">Download all (ZIP)</button></div>`;
+  d.showModal();$('#cx').onclick=()=>d.close();
+}
+
 const BL=[['fixed','Fixed retainer'],['variable','Variable retainer'],['oneoff','Single project'],['multi','Multi-deliverable']];
 const BLH={fixed:'Same amount every month',variable:'Amount changes each month',oneoff:'One fee, one project',multi:'One project, several deliverables'};
 const BLs=Object.fromEntries(BL),PRC=b=>[['ratecard','Rate card'],['work',b=='variable'?'Month-end amount':'Priced by work']];
@@ -201,7 +368,7 @@ function dash(){
 `<div class="grid">${card('Ready to invoice',inr(unb),"jump('rem')")}${card('Awaiting payment',inr(wait),"showP('awaiting')")}${card('In progress',S.projects.filter(p=>p.status=='In progress').length,"showP('all','In progress')")}</div>
 <h2 id="rem">To invoice <span class="cnt">${rem.length}</span></h2>`+(rem.length?rem.map(r=>{const days=Math.round((new Date(r.d+'T00:00')-new Date(td+'T00:00'))/864e5),cl=days<0?'over':days<=7?'soon':'later';
     const msg=days<0?`Overdue by ${-days} day${days==-1?'':'s'}`:days==0?'Due today':`Due ${fd(r.d)}`;
-    return`<div class="card rem ${cl}"><div>${clk(r.c.id)}<div class="mut">${msg}</div></div><div><b>${inr(r.t)}</b> <button onclick="go('client','${r.c.id}')">Invoice</button></div></div>`}).join(''):`<div class="card empty">Nothing to invoice right now</div>`)+
+    return`<div class="card rem ${cl}"><div>${clk(r.c.id)}<div class="mut">${msg}</div></div><div><b>${inr(r.t)}</b> <button onclick="openInv('${r.c.id}')">Invoice</button></div></div>`}).join(''):`<div class="card empty">Nothing to invoice right now</div>`)+
   `<h2>Awaiting payment <span class="cnt">${out.length+orp.length}</span></h2>`+(out.length+orp.length?orp.map(p=>row(clk(p.client),esc(p.name),inr(p.amount),`<button class="g" onclick="setF('projects','${p.id}','payment','Received')">Mark paid</button>`)).join('')+out.map(i=>row(clk(i.client),`Invoiced ${fd(i.date)}${i.disc?` · -${inr(i.disc)} discount`:''}${i.rush?` · +${inr(i.rush)} rush fee`:''}`,inr(i.total),`<button class="g" onclick="pay('${i.id}',true)">Mark paid</button>`)).join(''):`<div class="card empty">No unpaid invoices</div>`);
 }
 function ptab(){
@@ -244,16 +411,14 @@ function client(){
   }else if(tab=='proj'){
     panel=`<div class="bar"><button onclick="editProject()">Add project</button></div>`+(prs.length?`<div class="card wrap"><table><thead><tr><th>Date</th><th>Project</th><th class="n">Amount</th><th>Status</th><th>Payment</th><th></th></tr></thead><tbody>`+prs.map(p=>`<tr><td>${fd(p.date)}</td><td style="white-space:normal">${esc(p.name)}${R?` <span class="mut">· ${all.filter(e=>e.proj==p.id).length} deliverables</span>`:''}</td><td class="n">${inr(p.amount)}</td><td>${pS(p.status)}</td><td>${pP(p.payment)}${p.payment=='Received'&&p.paidMonth?` <span class="mut">${ml(p.paidMonth)}</span>`:''}</td><td><button class="t" onclick="editProject('${p.id}')">Edit</button><button class="t d" onclick="del('projects','${p.id}','project')">Delete</button></td></tr>`).join('')+`</tbody></table></div>`:'<div class="card empty">No projects yet.</div>');
   }else{
-    panel=invs.map(i=>`<div class="card rem"><div>${fd(i.date)} ${i.paid?pP('Received')+' '+fd(i.paidOn):pP('Invoice sent')}${i.disc||i.rush?`<div class="mut">${inr(i.sub)}${i.disc?` - ${inr(i.disc)} discount`:''}${i.rush?` + ${inr(i.rush)} rush fee`:''}</div>`:''}</div><div><b>${inr(i.total)}</b> <button class="g" onclick="pay('${i.id}',${!i.paid})">${i.paid?'Mark unpaid':'Mark paid'}</button><button class="t" onclick="editInv('${i.id}')">Edit</button><button class="t d" onclick="cancelInv('${i.id}')">Cancel</button></div></div>`).join('')||'<div class="card empty">No invoices yet.</div>';
+    panel=invs.map(i=>`<div class="card rem"><div>${i.number?esc(i.number)+' · ':''}${fd(i.date)} ${i.paid?pP('Received')+' '+fd(i.paidOn):pP('Invoice sent')}${i.disc||i.rush?`<div class="mut">${inr(i.sub)}${i.disc?` - ${inr(i.disc)} discount`:''}${i.rush?` + ${inr(i.rush)} rush fee`:''}</div>`:''}</div><div><b>${inr(i.total)}</b> <button class="g" onclick="openInv('${c.id}','${i.id}')">PDF</button><button class="g" onclick="pay('${i.id}',${!i.paid})">${i.paid?'Mark unpaid':'Mark paid'}</button><button class="t" onclick="editInv('${i.id}')">Edit</button><button class="t d" onclick="cancelInv('${i.id}')">Cancel</button></div></div>`).join('')||'<div class="card empty">No invoices yet.</div>';
   }
   const tb=(k,l,n)=>`<button class="${tab==k?'on':''}" onclick="ct='${k}';render()">${l} <span class="cnt">${n}</span></button>`;
   return`<div class="mut crumb"><a class="lk" href="#cli">Clients</a> / ${esc(c.name)}</div>
 <div class="bar"><h2 style="margin:0 6px 0 0">${esc(c.name)}</h2>${c.billing?`<span class="tag">${BLs[c.billing]}</span>`:''}<span class="sp"></span><button class="g" onclick="editClient('${c.id}')">Edit client</button><button class="g d" onclick="delClient('${c.id}')">Delete</button></div>
 <div class="mut">${esc(c.contact)}${c.contact&&price?' · ':''}${price}</div>${rcOf(c).length?`<div class="bar" style="margin:6px 0 0">${rcOf(c).map(r=>`<span class="tag">${esc(r.name)} ${inr(r.amount)}</span>`).join('')}</div>`:''}
 <div class="card" id="s-bill" style="margin-top:12px"><div class="bar" style="align-items:flex-end"><div><span class="mut">Ready to invoice</span><br><b class="big">${inr(t)}</b><div class="mut">${d?'Invoice by '+fd(d):c.cycle=='project'&&t?'Invoice once a project is Completed':'Nothing to invoice'}</div></div><span class="sp"></span>
-<label style="margin:0">Discount<br><input id="disc" type="number" min="0" value="0" style="width:100px" oninput="calcNet(${t})"></label>
-<label style="margin:0">Rush fee<br><input id="rush" type="number" min="0" value="0" style="width:100px" oninput="calcNet(${t})"></label>
-<div><span class="mut">Invoice total</span><br><b id="net" class="big" style="font-size:18px">${inr(t)}</b></div><button onclick="invoice('${c.id}')" ${t?'':'disabled'}>Mark invoiced</button></div></div>
+<button onclick="openInv('${c.id}')">Create invoice</button></div></div>
 <div class="tabs">${tb('work',R?'Deliverables':'Work entries',all.length)}${tb('proj','Projects',prs.length)}${tb('inv','Invoices',invs.length)}</div>${panel}`;
 }
 function editClient(id){
@@ -303,7 +468,7 @@ function cloudInit(){
 function signIn(){const a=firebase.auth(),p=new firebase.auth.GoogleAuthProvider();a.signInWithPopup(p).catch(e=>{if(e.code=='auth/popup-blocked'||e.code=='auth/operation-not-supported-in-this-environment')a.signInWithRedirect(p);else if(e.code!='auth/popup-closed-by-user')toast('Sign-in failed: '+(e.code||e.message))})}
 function signOut(){firebase.auth().signOut()}
 const dref=()=>fdb.collection('users').doc(fuser.uid).collection('tracker').doc('data');
-function adopt(d){S=Object.assign({clients:[],projects:[],entries:[],invoices:[],meta:{}},d);S.meta=S.meta||{};const c=migratePM()|migrateBilling();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}render();sv('✓ Synced');if(c)cloudPush()}
+function adopt(d){S=Object.assign({clients:[],projects:[],entries:[],invoices:[],meta:{}},d);S.meta=S.meta||{};fixS();const c=migratePM()|migrateBilling();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}render();sv('✓ Synced');if(c)cloudPush()}
 function cloudAttach(){
   if(unsub)unsub();sv('Syncing…');
   unsub=dref().onSnapshot(snap=>{
@@ -329,7 +494,7 @@ function migratePM(){if(S.meta.pm1)return false;S.projects.forEach(p=>{if(PM[p.i
 const BILL={"c1":{"billing":"oneoff","pricing":"","amount":6000,"rates":[]},"c2":{"billing":"oneoff","pricing":"","amount":3000,"rates":[]},"c3":{"billing":"oneoff","pricing":"","amount":0,"rates":[]},"c4":{"billing":"multi","pricing":"work","amount":0,"rates":[]},"c5":{"billing":"multi","pricing":"work","amount":0,"rates":[]},"c6":{"billing":"multi","pricing":"work","amount":0,"rates":[]},"c7":{"billing":"multi","pricing":"work","amount":0,"rates":[]},"c8":{"billing":"fixed","pricing":"","amount":13000,"rates":[]},"c9":{"billing":"oneoff","pricing":"","amount":1500,"rates":[]},"c10":{"billing":"variable","pricing":"work","amount":0,"rates":[]},"c11":{"billing":"oneoff","pricing":"","amount":0,"rates":[]},"c12":{"billing":"fixed","pricing":"","amount":4500,"rates":[]},"c13":{"billing":"oneoff","pricing":"","amount":7500,"rates":[]},"c14":{"billing":"oneoff","pricing":"","amount":6000,"rates":[]},"c15":{"billing":"variable","pricing":"work","amount":0,"rates":[]},"c16":{"billing":"multi","pricing":"work","amount":0,"rates":[]},"c17":{"billing":"variable","pricing":"ratecard","amount":0,"rates":[{"name":"Rs 250 rate","amount":250},{"name":"Rs 500 rate","amount":500},{"name":"Rs 750 rate","amount":750},{"name":"Rs 1000 rate","amount":1000}]},"c18":{"billing":"oneoff","pricing":"","amount":3500,"rates":[]},"c19":{"billing":"oneoff","pricing":"","amount":3000,"rates":[]},"c20":{"billing":"oneoff","pricing":"","amount":24817,"rates":[]},"c21":{"billing":"oneoff","pricing":"","amount":3000,"rates":[]},"c22":{"billing":"oneoff","pricing":"","amount":3000,"rates":[]},"c23":{"billing":"oneoff","pricing":"","amount":21000,"rates":[]},"c24":{"billing":"variable","pricing":"ratecard","amount":0,"rates":[{"name":"Rs 600 rate","amount":600},{"name":"Rs 1200 rate","amount":1200}]},"c25":{"billing":"variable","pricing":"work","amount":0,"rates":[]},"c26":{"billing":"oneoff","pricing":"","amount":42000,"rates":[]},"c27":{"billing":"variable","pricing":"ratecard","amount":0,"rates":[{"name":"Per asset","amount":1200}]}};
 function migrateBilling(){let ch=false;S.clients.forEach(c=>{const b=BILL[c.id];if(b&&!c.billing){Object.assign(c,JSON.parse(JSON.stringify(b)));c.retainer=unp(c);ch=true}});if(ch)S.meta.updatedAt=Date.now();return ch}
 function boot(){
-  S.meta=S.meta||{};['clients','projects','entries','invoices'].forEach(k=>S[k]=S[k]||[]);migratePM();migrateBilling();sync();cloudInit();
+  S.meta=S.meta||{};['clients','projects','entries','invoices'].forEach(k=>S[k]=S[k]||[]);fixS();migratePM();migrateBilling();sync();cloudInit();
   sv(mem?'Not saved — your browser is blocking storage':'✓ Saved on this device',mem);route();
 }
 boot();
