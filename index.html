@@ -169,22 +169,29 @@ function editInv(id){const i=S.invoices.find(x=>x.id==id);form('Edit invoice —
 function go(v,c){const h=v=='client'?'client/'+c:v;if(location.hash=='#'+h)route();else location.hash=h}
 let sy='all';
 function sumTotal(l){return l.reduce((a,p)=>a+(+p.amount||0),0)}
+function earnItems(){
+  const L=[];
+  S.invoices.filter(i=>i.paid&&i.total>0).forEach(i=>{const covered=(i.p||[]).some(id=>{const p=S.projects.find(x=>x.id==id);return p&&p.payment=='Received'&&p.amount>0});if(!covered)L.push({m:(i.paidOn||'').slice(0,7),amt:+i.total,client:i.client,label:'Invoice'+(i.number?' '+i.number:' of '+fd(i.date))})});
+  S.projects.filter(p=>p.payment=='Received'&&p.amount>0).forEach(p=>L.push({m:p.paidMonth||'',amt:+p.amount,client:p.client,label:p.name}));
+  return L;
+}
 function summary(){
-  const rec=S.projects.filter(p=>p.payment=='Received'&&p.amount>0),unset=rec.filter(p=>!p.paidMonth);
-  const all=[...new Set([...S.projects.map(p=>p.date.slice(0,7)),...rec.filter(p=>p.paidMonth).map(p=>p.paidMonth)])].sort();
+  const items=earnItems(),unset=items.filter(x=>!x.m);
+  const all=[...new Set([...S.projects.map(p=>p.date.slice(0,7)),...items.filter(x=>x.m).map(x=>x.m)])].sort();
   const years=[...new Set(all.map(m=>m.slice(0,4)))],ms=all.filter(m=>sy=='all'||m.startsWith(sy)).reverse();
-  const earn=m=>rec.filter(p=>p.paidMonth==m),st=m=>S.projects.filter(p=>p.date.slice(0,7)==m);
-  const tE=ms.reduce((a,m)=>a+sumTotal(earn(m)),0)+(sy=='all'?sumTotal(unset):0),mx=Math.max(1,...ms.map(m=>sumTotal(earn(m))));
-  const li=(p,x)=>`<div class="srow"><span>${clk(p.client)} <span class="mut">· ${esc(p.name)}</span></span><span>${x}</span></div>`;
+  const earn=m=>items.filter(x=>x.m==m),st=m=>S.projects.filter(p=>p.date.slice(0,7)==m),sA=l=>l.reduce((a,x)=>a+x.amt,0);
+  const tE=ms.reduce((a,m)=>a+sA(earn(m)),0)+(sy=='all'?sA(unset):0),mx=Math.max(1,...ms.map(m=>sA(earn(m))));
+  const li=(c,l,x)=>`<div class="srow"><span>${clk(c)} <span class="mut">· ${esc(l)}</span></span><span>${x}</span></div>`;
   const rows=ms.map(m=>{const e=earn(m),s=st(m),done=s.filter(p=>p.status=='Completed').length;
-    return`<details class="card mrow"><summary><b>${ml(m)}</b><span class="mbar"><i style="width:${Math.round(sumTotal(e)/mx*100)}%"></i></span><b class="n">${inr(sumTotal(e))}</b><span class="mut">${e.length} payment${e.length==1?'':'s'}</span><span class="mut">${s.length} started${s.length?`, ${done} completed`:''}</span></summary>
-<div class="lab">Payments received in ${ml(m)}</div>${e.length?e.map(p=>li(p,inr(p.amount))).join(''):'<div class="mut">None</div>'}
-<div class="lab">Projects started in ${ml(m)}</div>${s.length?s.map(p=>li(p,pS(p.status))).join(''):'<div class="mut">None</div>'}</details>`}).join('');
+    return`<details class="card mrow"><summary><b>${ml(m)}</b><span class="mbar"><i style="width:${Math.round(sA(e)/mx*100)}%"></i></span><b class="n">${inr(sA(e))}</b><span class="mut">${e.length} payment${e.length==1?'':'s'}</span><span class="mut">${s.length} started${s.length?`, ${done} completed`:''}</span></summary>
+<div class="lab">Payments received in ${ml(m)}</div>${e.length?e.map(x=>li(x.client,x.label,inr(x.amt))).join(''):'<div class="mut">None</div>'}
+<div class="lab">Projects started in ${ml(m)}</div>${s.length?s.map(p=>li(p.client,p.name,pS(p.status))).join(''):'<div class="mut">None</div>'}</details>`}).join('');
   return`<div class="bar"><select onchange="sy=this.value;render()"><option value="all">All time</option>${opts(years,sy)}</select><span class="mut">Earnings are counted in the month payment is received.</span></div>
 <div class="grid"><div class="card stat"><span class="mut">Received${sy=='all'?'':' in '+sy}</span><b>${inr(tE)}</b></div><div class="card stat"><span class="mut">Payments received</span><b>${ms.reduce((a,m)=>a+earn(m).length,0)+(sy=='all'?unset.length:0)}</b></div><div class="card stat"><span class="mut">Projects started</span><b>${ms.reduce((a,m)=>a+st(m).length,0)}</b></div></div>
-${unset.length&&sy=='all'?`<details class="card mrow" style="margin-top:10px;border-color:var(--warn)"><summary><b>Month not set</b><span class="mut" style="grid-column:2/4">Set the month under Projects, Paid in.</span><b class="n">${inr(sumTotal(unset))}</b><span class="mut">${unset.length} payment${unset.length==1?'':'s'}</span></summary>${unset.map(p=>li(p,inr(p.amount))).join('')}</details>`:''}
+${unset.length&&sy=='all'?`<details class="card mrow" style="margin-top:10px;border-color:var(--warn)"><summary><b>Month not set</b><span class="mut" style="grid-column:2/4">Set the month under Projects, Paid in.</span><b class="n">${inr(sA(unset))}</b><span class="mut">${unset.length} payment${unset.length==1?'':'s'}</span></summary>${unset.map(x=>li(x.client,x.label,inr(x.amt))).join('')}</details>`:''}
 <h2>Month by month</h2>${rows||'<div class="card empty">Nothing to show yet.</div>'}`;
 }
+
 
 function route(){const h=(location.hash||'#dash').slice(1).split('/'),nv=['dash','proj','cli','client','sum'].includes(h[0])?h[0]:'dash';if(nv!=view||(h[1]||null)!=cur){mf='all';bf='all';ct=null}view=nv;cur=h[1]||null;render();scrollTo(0,0)}
 addEventListener('hashchange',route);
@@ -313,14 +320,14 @@ const toCsv=(h,rows)=>'\uFEFF'+[h,...rows].map(r=>r.map(csvEsc).join(',')).join(
 function csvSets(){
   const cl=id=>S.clients.find(c=>c.id==id)||{},byD=(a,b)=>a.date<b.date?-1:a.date>b.date?1:0;
   const invOf=e=>S.invoices.find(i=>(i.e||[]).includes(e.id)),pn=id=>{const p=S.projects.find(x=>x.id==id);return p?p.name+' ('+p.date.slice(0,7)+')':''};
-  const rec=S.projects.filter(p=>p.payment=='Received'&&p.amount>0),unset=rec.filter(p=>!p.paidMonth);
-  const ms=[...new Set([...S.projects.map(p=>p.date.slice(0,7)),...rec.filter(p=>p.paidMonth).map(p=>p.paidMonth)])].sort();
+  const rec=earnItems(),unset=rec.filter(x=>!x.m);
+  const ms=[...new Set([...S.projects.map(p=>p.date.slice(0,7)),...rec.filter(x=>x.m).map(x=>x.m)])].sort();
   return{
     projects:toCsv(['Date','Client','Project','Amount','Status','Payment','Paid in','Timeline','Invoiced'],S.projects.slice().sort(byD).map(p=>[p.date,cl(p.client).name,p.name,p.amount||0,p.status,p.payment,p.paidMonth||'',p.duration||'',p.invoiced?'Yes':'No'])),
     entries:toCsv(['Date','Client','Description','Qty','Rate','Amount','Linked to','Invoiced','Invoice date','Invoice total'],S.entries.slice().sort(byD).map(e=>{const i=invOf(e);return[e.date,cl(e.client).name,e.desc,e.qty,e.rate||0,(e.qty||0)*(e.rate||0),pn(e.proj),e.invoiced?'Yes':'No',i?i.date:'',i?i.total:'']})),
     invoices:toCsv(['Number','Date','Client','Month(s) of service','Subtotal','Advance','Discount','Rush fee','Total','Status','Paid on','Billed to'],S.invoices.slice().sort(byD).map(i=>[i.number||'',i.date,cl(i.client).name,i.service||'',i.sub||0,i.adv||0,i.disc||0,i.rush||0,i.total||0,i.paid?'Paid':'Awaiting payment',i.paidOn||'',i.billTo||''])),
     clients:toCsv(['Client','Contact','Billing type','Pricing','Fixed amount','Rate card','Invoice reminder','Quantity heading','Billed to'],S.clients.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(c=>[c.name,c.contact||'',BLs[c.billing]||'',c.pricing==='ratecard'?'Rate card':c.pricing==='work'?(c.billing=='variable'?'Month-end amount':'Priced by work'):'',c.amount||'',(c.rates||[]).map(r=>r.name+' '+r.amount).join('; '),CYC[c.cycle]||'',c.unit||'',c.billTo||''])),
-    summary:toCsv(['Month','Received','Payments received','Projects started','Started and completed'],[...ms.map(m=>{const e=rec.filter(p=>p.paidMonth==m),s=S.projects.filter(p=>p.date.slice(0,7)==m);return[m,e.reduce((a,p)=>a+p.amount,0),e.length,s.length,s.filter(p=>p.status=='Completed').length]}),...(unset.length?[['Month not set',unset.reduce((a,p)=>a+p.amount,0),unset.length,'','']]:[])])
+    summary:toCsv(['Month','Received','Payments received','Projects started','Started and completed'],[...ms.map(m=>{const e=rec.filter(x=>x.m==m),s=S.projects.filter(p=>p.date.slice(0,7)==m);return[m,e.reduce((a,x)=>a+x.amt,0),e.length,s.length,s.filter(p=>p.status=='Completed').length]}),...(unset.length?[['Month not set',unset.reduce((a,x)=>a+x.amt,0),unset.length,'','']]:[])])
   };
 }
 const CSVN={projects:['Projects','Every project with status, payment and month paid'],entries:['Work entries','Work and deliverables, with rate, amount and invoice'],invoices:['Invoices','Numbers, totals, discounts and paid status'],clients:['Clients','Billing type, rate cards and reminders'],summary:['Monthly summary','Earnings by month received, plus projects started']};
